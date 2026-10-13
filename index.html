@@ -1,13 +1,3193 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>bukangi</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
-  </body>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="상어 부캉이의 눈으로 바다를 바라보고, 함께 사는 방법을 찾아보는 10분 탐구 활동">
+<meta name="theme-color" content="#0b2545">
+<title>부캉이의 바다</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A6%88%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fastly.jsdelivr.net" crossorigin>
+<style>
+/* ================================================================
+   글꼴 (눈누 CDN) — 제목: 강원교육튼튼 / 본문: 강원교육모두
+   ================================================================ */
+@font-face { font-family: 'GangwonEduPowerExtraBoldA';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEduPowerExtraBoldA.woff') format('woff');
+  font-weight: normal; font-display: swap; }
+@font-face { font-family: 'GangwonEdu_OTFBoldA';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEdu_OTFBoldA.woff') format('woff');
+  font-weight: 700; font-display: swap; }
+@font-face { font-family: 'GangwonEdu_OTFLightA';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEdu_OTFLightA.woff') format('woff');
+  font-weight: 400; font-display: swap; }
+
+/* ================================================================
+   색과 공통 값
+   ================================================================ */
+:root {
+  color-scheme: light;
+  --font-title: 'GangwonEduPowerExtraBoldA', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif;
+  --font-body: 'GangwonEdu_OTFLightA', 'GangwonEdu_OTFBoldA', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif;
+  --font-bold: 'GangwonEdu_OTFBoldA', 'GangwonEdu_OTFLightA', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif;
+
+  --navy-950: #061428;
+  --navy-900: #081d38;
+  --navy-800: #0b2545;
+  --navy-700: #13315c;
+  --navy-600: #1d4677;
+  --teal-800: #0b5c5e;
+  --teal-700: #0f6e70;
+  --teal-600: #1f7f73;
+  --teal-500: #2a9d8f;
+  --teal-300: #7fd1c7;
+  --teal-100: #dcf3ef;
+  --sand-50:  #fffaf1;
+  --sand-100: #fbf3e4;
+  --sand-200: #f3e5c8;
+  --sand-300: #e6cf9f;
+  --coral-300: #f8b9a6;
+  --coral-400: #f4977d;
+  --coral-500: #f08a6c;
+  --coral-600: #d9643f;
+  --coral-700: #b8462a;
+  --ink: #12253f;
+  --ink-soft: #3c4f68;
+  --ink-mute: #56677d;
+  --line: #e4d6bb;
+  --line-strong: #9c8a63;
+  --paper: #fffaf1;
+  --paper-2: #fbf3e4;
+  --on-dark: #f7f4ec;
+  --on-dark-soft: #c4d3e4;
+  --focus: #b8462a;
+
+  /* 시뮬레이션 게이지: 남색 바탕에서 색약 구분·대비 검증을 통과한 3색 */
+  --g-safety: #e0663a;  --g-safety-track: #4a2c2c;
+  --g-eco:    #1aa577;  --g-eco-track:    #0f3f3c;
+  --g-shark:  #4a92ea;  --g-shark-track:  #1a3a63;
+
+  --radius-lg: 24px;
+  --radius-md: 16px;
+  --shadow: 0 12px 32px rgba(3, 14, 30, .28);
+  --shadow-soft: 0 4px 14px rgba(3, 14, 30, .14);
+  --ease: cubic-bezier(.22, .8, .3, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--ink);
+  background: var(--navy-900);
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  -webkit-tap-highlight-color: transparent;
+}
+body.modal-open { overflow: hidden; }
+h1, h2, h3, h4 { font-family: var(--font-title); font-weight: normal; font-synthesis: none; line-height: 1.3; letter-spacing: -0.01em; margin: 0; }
+strong, b { font-family: var(--font-bold); font-weight: 700; }
+p { margin: 0 0 .6em; }
+p:last-child { margin-bottom: 0; }
+button, input, textarea, select { font: inherit; color: inherit; }
+img, svg { max-width: 100%; }
+[hidden] { display: none !important; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+.on-dark, .topbar, .screen-head, .screen-nav, .gauges, .start-hero, .meaning, .ac-head, .carousel-controls, .sim-note, .card-help { --focus: #ffd166; }
+
+.sr-only { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.skip-link { position: absolute; left: 12px; top: -80px; z-index: 300; background: #fff; color: var(--ink); padding: 10px 16px; border-radius: 10px; font-family: var(--font-bold); text-decoration: none; }
+.skip-link:focus { top: 12px; }
+
+/* ================================================================
+   바다 배경
+   ================================================================ */
+.ocean { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(127, 209, 199, .32), transparent 70%),
+    linear-gradient(180deg, #0f4766 0%, #0b3157 30%, #0a2446 62%, #061833 100%); }
+.ocean .ray { position: absolute; top: -20%; width: 16vw; min-width: 90px; height: 130%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .09), rgba(255, 255, 255, 0) 75%);
+  transform: rotate(14deg); transform-origin: top center; animation: ray 11s ease-in-out infinite alternate; }
+.ocean .ob { position: absolute; bottom: -40px; border-radius: 50%;
+  border: 2px solid rgba(220, 243, 239, .35); background: rgba(220, 243, 239, .06);
+  animation: rise linear infinite; }
+@keyframes ray { from { opacity: .5; transform: rotate(12deg); } to { opacity: 1; transform: rotate(17deg); } }
+@keyframes rise { from { transform: translateY(0); opacity: 0; } 10% { opacity: 1; } to { transform: translateY(-115vh); opacity: 0; } }
+
+.app { overflow-x: clip; min-height: 100vh; }
+
+/* ================================================================
+   상단 진행 표시줄
+   ================================================================ */
+.topbar { position: sticky; top: 0; z-index: 40; color: var(--on-dark);
+  background: rgba(8, 29, 56, .94); border-bottom: 1px solid rgba(127, 209, 199, .18);
+  padding-top: env(safe-area-inset-top, 0px); box-shadow: 0 4px 18px rgba(3, 14, 30, .25); }
+.topbar-inner { max-width: 1160px; margin: 0 auto; padding: 8px 12px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 6px; flex: none; }
+.brand-logo { display: block; width: 40px; }
+.brand-logo svg { display: block; width: 40px; height: auto; }
+.brand-name { display: none; font-family: var(--font-title); font-size: 19px; white-space: nowrap; color: #fff3dc; }
+.steps { flex: 1 1 auto; min-width: 0; }
+.steps ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; }
+.step-btn { position: relative; width: 100%; min-height: 44px; display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 4px 6px; border-radius: 12px; border: 1px solid rgba(196, 211, 228, .28); background: rgba(255, 255, 255, .04);
+  color: var(--on-dark-soft); cursor: pointer; text-align: left; transition: background-color .25s, border-color .25s, color .25s; }
+.step-num { flex: none; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%;
+  font-family: var(--font-bold); font-size: 16px; background: rgba(255, 255, 255, .1); }
+.step-label { display: none; min-width: 0; line-height: 1.2; }
+.step-name { display: block; font-family: var(--font-bold); font-size: 16px; color: inherit; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.step-time { display: block; font-size: 16px; opacity: .92; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.step-btn.is-done { background: rgba(127, 209, 199, .14); border-color: rgba(127, 209, 199, .5); color: var(--on-dark); }
+.step-btn.is-done .step-num { background: var(--teal-300); color: var(--navy-800); }
+.step-btn.is-current { background: var(--coral-400); border-color: var(--coral-400); color: var(--ink); }
+.step-btn.is-current .step-num { background: var(--ink); color: #fff; }
+.step-btn[aria-disabled="true"] { cursor: not-allowed; }
+.step-btn:not([aria-disabled="true"]):not(.is-current):hover { background: rgba(255, 255, 255, .12); }
+.teacher-btn { flex: none; min-width: 44px; min-height: 44px; padding: 4px 10px; border-radius: 12px; cursor: pointer;
+  border: 1px solid rgba(196, 211, 228, .35); background: transparent; color: var(--on-dark-soft); font-size: 16px; display: inline-flex; align-items: center; justify-content: center; gap: 4px; }
+.teacher-btn:hover { background: rgba(255, 255, 255, .1); color: var(--on-dark); }
+.teacher-btn .t-txt { display: none; }
+.progress-now { flex-basis: 100%; margin: 0; font-size: 16px; color: var(--on-dark-soft); line-height: 1.4; }
+.progress-now b { color: var(--on-dark); }
+.progress-track { height: 4px; background: rgba(255, 255, 255, .08); }
+.progress-track i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--teal-300), var(--coral-400)); transition: width .6s var(--ease); }
+
+/* ================================================================
+   공통 레이아웃과 부품
+   ================================================================ */
+main { max-width: 1160px; margin: 0 auto; padding: 18px 16px 56px; outline: none; }
+.screen.is-entering { animation: screenIn .5s var(--ease) both; }
+.screen.is-entering.from-back { animation-name: screenInBack; }
+@keyframes screenIn { from { opacity: 0; transform: translateX(28px); } to { opacity: 1; transform: none; } }
+@keyframes screenInBack { from { opacity: 0; transform: translateX(-28px); } to { opacity: 1; transform: none; } }
+
+.screen-head { color: var(--on-dark); margin: 4px 0 16px; }
+.screen-head h2 { font-size: clamp(28px, 5vw, 40px); color: #fff3dc; margin: 10px 0 6px; outline: none; }
+.eyebrow { display: inline-flex; align-items: center; gap: 8px; margin: 0; padding: 4px 12px; border-radius: 999px;
+  font-family: var(--font-bold); font-size: 16px; color: var(--teal-300); background: rgba(127, 209, 199, .12); }
+.lead { margin: 0; color: var(--on-dark-soft); max-width: 62ch; }
+
+.panel { background: var(--paper); border-radius: var(--radius-lg); box-shadow: var(--shadow); padding: clamp(16px, 3vw, 28px); }
+.panel + .panel, .panel + .q-panel, .q-panel + .panel { margin-top: 16px; }
+.block-title { display: block; font-family: var(--font-title); font-size: clamp(20px, 3vw, 26px); margin-bottom: 6px; padding: 0; }
+.help { color: var(--ink-soft); margin: 0 0 10px; }
+fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+legend { padding: 0; }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 10px 20px;
+  border-radius: 999px; border: 2px solid transparent; font-family: var(--font-bold); font-size: 17px; line-height: 1.25;
+  text-align: center; text-decoration: none; cursor: pointer; transition: transform .15s, background-color .2s, box-shadow .2s, border-color .2s; }
+.btn:active { transform: translateY(2px); }
+.btn[disabled] { opacity: .65; cursor: progress; }
+.btn-primary { font-family: var(--font-title); font-weight: normal; letter-spacing: .01em; background: var(--coral-500); color: var(--ink); box-shadow: 0 4px 0 #b9573c; }
+.btn-primary:hover { background: #f49b80; }
+.btn-primary:active { box-shadow: 0 2px 0 #b9573c; }
+.btn-secondary { background: #fff; color: var(--teal-800); border-color: var(--teal-700); }
+.btn-secondary:hover { background: var(--teal-100); }
+.btn-light { background: var(--sand-100); color: var(--ink); border-color: var(--sand-300); }
+.btn-light:hover { background: #fff; }
+.btn-ghost-dark { background: rgba(255, 255, 255, .08); color: var(--on-dark); border-color: rgba(196, 211, 228, .45); }
+.btn-ghost-dark:hover { background: rgba(255, 255, 255, .16); }
+.btn-ghost-dark[aria-disabled="true"] { opacity: .45; cursor: default; }
+.btn-lg { min-height: 56px; font-size: 20px; padding: 12px 28px; }
+.btn-block { width: 100%; }
+.btn-danger { background: #fff; color: #9b2c12; border-color: #c2410c; }
+.btn-danger:hover { background: #fff1ea; }
+
+.screen-nav { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 22px; }
+.screen-nav [data-next] { margin-left: auto; }
+.nav-hint { flex-basis: 100%; margin: 0; min-height: 0; color: #ffd9cc; font-family: var(--font-bold); text-align: right; }
+.nav-hint:empty { display: none; }
+
+.field { display: grid; gap: 6px; margin-top: 16px; }
+.field > label, .label { font-family: var(--font-bold); }
+.opt { font-family: var(--font-body); color: var(--ink-soft); }
+.input, .textarea { width: 100%; min-height: 50px; padding: 12px 14px; border: 2px solid var(--line-strong); border-radius: 14px;
+  background: #fff; color: var(--ink); font-size: 17px; line-height: 1.55; transition: border-color .2s, box-shadow .2s; }
+.textarea { min-height: 140px; resize: vertical; }
+.input::placeholder, .textarea::placeholder { color: #6b7787; opacity: 1; }
+.input:focus, .textarea:focus { outline: none; border-color: var(--teal-700); box-shadow: 0 0 0 4px rgba(15, 110, 112, .25); }
+.is-invalid { border-color: var(--coral-700) !important; box-shadow: 0 0 0 4px rgba(184, 70, 42, .18) !important; }
+
+/* 라디오·체크박스 카드 */
+.vh-input { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; pointer-events: none; }
+.emo-grid { display: grid; gap: 18px; }
+.emo-legend { font-family: var(--font-bold); margin-bottom: 8px; }
+.emo-options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.emo-opt { position: relative; display: block; }
+.emo-opt .face { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-height: 76px; padding: 8px 4px;
+  border-radius: 16px; border: 2px solid var(--line); background: #fff; cursor: pointer; text-align: center; transition: border-color .2s, background-color .2s, transform .2s; }
+.emo-opt .emo { font-size: 30px; line-height: 1.1; }
+.emo-opt .emo-txt { font-size: 16px; }
+.emo-opt:hover .face { border-color: var(--line-strong); }
+.emo-opt input:checked + .face { border-color: var(--coral-700); background: #fff1ea; box-shadow: inset 0 0 0 1px var(--coral-700); transform: translateY(-2px); }
+.emo-opt input:checked + .face .emo-txt { font-family: var(--font-bold); }
+.emo-opt input:focus-visible + .face { outline: 3px solid var(--focus); outline-offset: 3px; }
+
+.opt-grid { display: grid; gap: 10px; }
+.opt-card { position: relative; display: block; }
+.opt-card .box { display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 12px 16px; border-radius: 16px;
+  border: 2px solid var(--line-strong); background: #fff; cursor: pointer; transition: border-color .2s, background-color .2s; }
+.opt-card .box:hover { background: #fffdf8; }
+.opt-card .tick { flex: none; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--line-strong); background: #fff; }
+.opt-card .tick::after { content: ''; width: 12px; height: 12px; border-radius: 50%; background: transparent; }
+.opt-card input:checked + .box { border-color: var(--coral-700); background: #fff1ea; box-shadow: inset 0 0 0 1px var(--coral-700); }
+.opt-card input:checked + .box .tick { border-color: var(--coral-700); }
+.opt-card input:checked + .box .tick::after { background: var(--coral-700); }
+.opt-card input:focus-visible + .box { outline: 3px solid var(--focus); outline-offset: 3px; }
+.opt-card .opt-icon { flex: none; width: 64px; }
+.opt-card .opt-icon svg { display: block; width: 64px; height: auto; }
+.opt-card .opt-main { display: grid; gap: 2px; }
+.opt-card .opt-title { font-family: var(--font-title); font-size: 20px; }
+.opt-card .opt-desc { color: var(--ink-soft); font-size: 16px; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { position: relative; display: inline-block; }
+.chip .pill { display: inline-flex; align-items: center; gap: 6px; min-height: 46px; padding: 8px 16px; border-radius: 999px;
+  border: 2px solid var(--line-strong); background: #fff; cursor: pointer; transition: background-color .2s, color .2s, border-color .2s; }
+.chip .pill::before { content: '+'; font-family: var(--font-bold); color: var(--teal-700); }
+.chip:hover .pill { background: #f6fbfa; }
+.chip input:checked + .pill { background: var(--teal-700); border-color: var(--teal-700); color: #fff; font-family: var(--font-bold); }
+.chip input:checked + .pill::before { content: '✓'; color: #fff; }
+.chip input:focus-visible + .pill { outline: 3px solid var(--focus); outline-offset: 3px; }
+
+/* 발문 */
+.q-panel { border: 3px solid var(--sand-300); }
+.q-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 999px;
+  background: var(--navy-800); color: #fff; font-family: var(--font-bold); font-size: 16px; }
+.q-title { font-size: clamp(21px, 3.4vw, 28px); margin: 10px 0 16px; }
+
+/* ================================================================
+   0단계: 시작
+   ================================================================ */
+.start { display: grid; gap: 22px; align-items: center; padding-top: 8px; }
+.start-hero { text-align: center; color: var(--on-dark); }
+.start-bk { position: relative; width: min(330px, 74vw); margin: 0 auto; }
+.start-bk svg { display: block; width: 100%; height: auto; filter: drop-shadow(0 14px 18px rgba(0, 0, 0, .28)); }
+.start-title { font-size: clamp(46px, 11vw, 84px); color: #fff3dc; margin: 4px 0 10px; text-shadow: 0 5px 0 rgba(3, 14, 30, .35); outline: none; }
+.start-sub { font-size: clamp(18px, 2.8vw, 23px); color: var(--on-dark-soft); max-width: 24em; margin: 0 auto; }
+.start-panel h2 { font-size: 22px; margin-bottom: 4px; }
+.start-meta { margin: 14px 0 0; color: var(--ink-soft); }
+.start-steps { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 6px; counter-reset: st; }
+.start-steps li { display: flex; justify-content: space-between; gap: 10px; padding: 8px 12px; border-radius: 12px; background: var(--paper-2); counter-increment: st; }
+.start-steps li::before { content: counter(st); flex: none; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--teal-700); color: #fff; font-family: var(--font-bold); font-size: 16px; }
+.start-steps .s-name { flex: 1; font-family: var(--font-bold); }
+.start-steps .s-time { color: var(--ink-soft); white-space: nowrap; }
+.start-actions { display: grid; gap: 10px; margin-top: 16px; }
+.link-btn { justify-self: center; min-height: 44px; padding: 6px 12px; border: 0; background: none; color: var(--teal-800); text-decoration: underline; cursor: pointer; font-family: var(--font-bold); }
+
+/* ================================================================
+   1단계: 이야기 카드 + 비교 슬라이더
+   ================================================================ */
+.carousel { position: relative; }
+.carousel-viewport { position: relative; overflow: hidden; border-radius: var(--radius-lg); box-shadow: var(--shadow); background: var(--paper);
+  touch-action: pan-y; transition: height .45s var(--ease); }
+.carousel-track { display: flex; align-items: flex-start; transition: transform .55s var(--ease); }
+.carousel-track.is-dragging { transition: none; user-select: none; -webkit-user-select: none; }
+.slide { flex: 0 0 100%; min-width: 0; background: var(--paper); }
+.slide:not(.is-active) * { animation-play-state: paused !important; }
+.slide-scene { position: relative; background: #bfe6ef; overflow: hidden; }
+.slide-scene > svg { display: block; width: 100%; height: auto; }
+.slide-body { padding: 18px 18px 22px; }
+.slide-tag { display: inline-block; padding: 3px 12px; border-radius: 999px; background: var(--teal-100); color: var(--teal-800); font-family: var(--font-bold); font-size: 16px; }
+.slide-title { font-size: clamp(23px, 3.6vw, 31px); margin: 10px 0 12px; }
+.speech { position: relative; background: #fff; border: 2px solid var(--sand-200); border-radius: 18px; padding: 14px 16px; }
+.speech-who { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-family: var(--font-bold); }
+.speech-who small { font-family: var(--font-body); font-size: 16px; color: var(--ink-soft); }
+.bk-mini { display: block; width: 66px; height: auto; flex: none; }
+.mood-chip { display: inline-block; padding: 1px 10px; border-radius: 999px; font-size: 16px; font-family: var(--font-bold); background: var(--sand-100); color: var(--ink-soft); border: 1px solid var(--sand-300); }
+
+.carousel-controls { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-top: 14px; }
+.dots { order: -1; flex-basis: 100%; display: flex; justify-content: center; gap: 2px; }
+.dot { width: 44px; height: 44px; display: grid; place-items: center; padding: 0; border: 0; background: none; cursor: pointer; border-radius: 10px; }
+.dot::before { content: ''; width: 12px; height: 12px; border-radius: 6px; background: rgba(196, 211, 228, .5); transition: width .3s, background-color .3s; }
+.dot.is-seen::before { background: var(--teal-300); }
+.dot[aria-current="true"]::before { width: 30px; background: var(--coral-400); }
+
+.compare-layout { display: grid; gap: 16px; padding: 16px; }
+.compare { position: relative; border-radius: 18px; overflow: hidden; touch-action: pan-y; user-select: none; -webkit-user-select: none; cursor: ew-resize; background: #bfe6ef; --pos: 50%; }
+.compare-after > svg { display: block; width: 100%; height: auto; }
+.compare-before { position: absolute; inset: 0; clip-path: inset(0 calc(100% - var(--pos)) 0 0); -webkit-clip-path: inset(0 calc(100% - var(--pos)) 0 0); }
+.compare-before > svg { display: block; width: 100%; height: 100%; }
+.compare-line { position: absolute; top: 0; bottom: 0; left: var(--pos); width: 4px; margin-left: -2px; background: #fff; box-shadow: 0 0 0 1px rgba(11, 37, 69, .35); pointer-events: none; }
+.compare-handle { position: absolute; top: 50%; left: var(--pos); width: 58px; height: 58px; margin: -29px 0 0 -29px; border-radius: 50%;
+  display: grid; place-items: center; background: var(--coral-500); border: 4px solid #fff; box-shadow: 0 4px 14px rgba(3, 14, 30, .35);
+  color: var(--ink); cursor: grab; touch-action: none; }
+.compare-handle:active { cursor: grabbing; }
+.compare-handle svg { width: 34px; height: 20px; }
+.compare-handle:focus-visible { outline: 4px solid #ffd166; outline-offset: 3px; }
+.compare-tag { position: absolute; top: 10px; padding: 4px 12px; border-radius: 999px; background: rgba(11, 37, 69, .86); color: #fff; font-family: var(--font-bold); font-size: 16px; pointer-events: none; }
+.compare-tag--before { left: 10px; }
+.compare-tag--after { right: 10px; }
+.compare-hint { position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%); padding: 4px 14px; border-radius: 999px; background: rgba(255, 250, 241, .95); color: var(--ink); font-family: var(--font-bold); font-size: 16px; white-space: nowrap; pointer-events: none; animation: nudge 1.6s ease-in-out infinite; }
+@keyframes nudge { 0%, 100% { transform: translateX(-50%); } 50% { transform: translateX(calc(-50% + 8px)); } }
+.compare-side .slide-title { margin-top: 8px; }
+.compare-guide { color: var(--ink-soft); }
+.compare-who { display: flex; gap: 10px; align-items: center; margin: 10px 0 14px; padding: 10px 12px; border-radius: 16px; background: #fff; border: 2px solid var(--sand-200); }
+.compare-who p { margin: 0; }
+.indicators { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.ind { display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; align-items: center; }
+.ind-label { font-family: var(--font-bold); }
+.ind-word { font-family: var(--font-bold); color: var(--teal-800); min-width: 3em; text-align: right; }
+.ind-bar { grid-column: 1 / -1; height: 12px; border-radius: 999px; background: #d3ece8; overflow: hidden; }
+.ind-bar i { display: block; height: 100%; width: 50%; border-radius: inherit; background: var(--teal-600); }
+.ind-scale { display: flex; justify-content: space-between; font-size: 16px; color: var(--ink-mute); margin-top: 8px; }
+
+/* ================================================================
+   2단계: 시뮬레이션
+   ================================================================ */
+.situation { display: grid; grid-template-columns: 96px 1fr; gap: 14px; align-items: center; }
+.situation-bk svg { display: block; width: 96px; height: auto; }
+.situation-tag { display: inline-block; margin: 0 0 4px; padding: 2px 12px; border-radius: 999px; background: #fff1ea; color: #8f3418; font-family: var(--font-bold); font-size: 16px; }
+.situation h3 { font-size: clamp(20px, 3.2vw, 27px); margin-bottom: 6px; }
+.situation p { color: var(--ink-soft); }
+
+.choices { display: grid; gap: 14px; margin-top: 16px; }
+.choice { position: relative; display: grid; grid-template-columns: 76px 1fr; gap: 14px; align-items: start; width: 100%; padding: 18px; text-align: left;
+  background: var(--paper); color: var(--ink); border: 3px solid transparent; border-radius: var(--radius-lg); box-shadow: var(--shadow);
+  cursor: pointer; transition: transform .2s, border-color .2s, box-shadow .2s; }
+.choice:hover { transform: translateY(-3px); }
+.choice.is-selected { border-color: var(--coral-500); box-shadow: 0 0 0 4px rgba(240, 138, 108, .35), var(--shadow); }
+.choice-head { margin: 0; }
+.choice-btn { display: inline-flex; align-items: center; gap: 6px; min-height: 46px; margin-top: 12px; padding: 8px 16px; border-radius: 999px;
+  border: 2px solid var(--coral-700); background: #fff; color: #8f3418; font-family: var(--font-bold); cursor: pointer; text-align: left; }
+.choice-btn::after { content: ''; position: absolute; inset: 0; border-radius: var(--radius-lg); }
+.choice-btn:focus-visible { outline: none; }
+.choice-btn:focus-visible::after { box-shadow: 0 0 0 4px #ffd166; }
+.choice.is-selected .choice-btn { background: var(--coral-500); border-color: var(--coral-500); color: var(--ink); }
+.choice-icon svg { display: block; width: 76px; height: auto; }
+.choice-letter { display: inline-grid; place-items: center; width: 34px; height: 34px; margin-right: 6px; border-radius: 50%; background: var(--navy-800); color: #fff; font-family: var(--font-title); font-size: 18px; vertical-align: middle; }
+.choice-title { font-size: clamp(22px, 3.2vw, 27px); display: inline; vertical-align: middle; }
+.choice-desc { margin: 8px 0 6px; }
+.choice ul { margin: 0; padding-left: 1.15em; color: var(--ink-soft); }
+.choice-focus { margin: 8px 0 0; padding: 6px 10px; border-radius: 10px; background: var(--paper-2); font-size: 16px; color: var(--ink-soft); }
+.choice-cta { display: inline-block; margin-top: 10px; font-family: var(--font-bold); color: var(--coral-700); }
+.choice-seen { display: inline-block; margin: 0 0 6px; padding: 2px 10px; border-radius: 999px; background: var(--teal-100); color: var(--teal-800); font-family: var(--font-bold); font-size: 16px; }
+
+.sim { margin-top: 18px; }
+.sim-panel { background: var(--paper); border-radius: var(--radius-lg); box-shadow: var(--shadow); }
+.sim-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; padding: 16px 18px 10px; }
+.sim-title { font-size: clamp(20px, 3vw, 26px); outline: none; }
+.sim-controls { display: flex; gap: 6px; }
+.icon-btn { width: 48px; height: 48px; display: grid; place-items: center; padding: 0; border-radius: 50%; border: 2px solid var(--teal-700);
+  background: #fff; color: var(--teal-800); cursor: pointer; font-size: 18px; line-height: 1; transition: background-color .2s; }
+.icon-btn:hover { background: var(--teal-100); }
+.icon-btn.is-primary { background: var(--teal-700); color: #fff; }
+.years { list-style: none; margin: 0; padding: 0 18px 12px; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px; }
+.year-btn { position: relative; overflow: hidden; width: 100%; min-height: 44px; padding: 4px 2px; border-radius: 12px; border: 2px solid var(--line);
+  background: #fff; color: var(--ink-soft); font-family: var(--font-bold); font-size: 16px; cursor: pointer; white-space: nowrap; }
+.year-btn.is-done { border-color: var(--teal-500); color: var(--teal-800); }
+.year-btn[aria-current="step"] { background: var(--navy-800); border-color: var(--navy-800); color: #fff; }
+.year-btn .yp { position: absolute; left: 0; bottom: 0; height: 4px; width: 0; background: var(--coral-500); }
+.sim-body { display: grid; gap: 14px; padding: 0 18px 18px; grid-template-columns: minmax(0, 1fr); grid-template-areas: "scene" "gauges" "event" "chain"; align-items: start; }
+.sim-scene { grid-area: scene; position: relative; border-radius: 18px; overflow: hidden; background: #2c95a8; }
+.sim-scene > svg { display: block; width: 100%; height: auto; }
+.sim-stamp { position: absolute; bottom: 10px; left: 10px; padding: 3px 14px; border-radius: 999px; background: rgba(11, 37, 69, .88); color: #fff; font-family: var(--font-title); font-size: 20px; pointer-events: none; }
+.si { transition: opacity .9s ease; }
+.si.off { opacity: 0; }
+.sim-event { grid-area: event; background: var(--paper-2); border: 2px solid var(--sand-200); border-radius: 16px; padding: 14px 16px; }
+.sim-event h4 { font-size: 21px; margin-bottom: 6px; }
+.sim-event .ev-text { margin: 0; }
+.sim-event.is-new { animation: evIn .5s var(--ease); }
+@keyframes evIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.voice { display: flex; gap: 8px; align-items: flex-start; margin: 10px 0 0; }
+.voice-who { flex: none; padding: 2px 10px; border-radius: 999px; background: var(--teal-100); color: var(--teal-800); font-family: var(--font-bold); font-size: 16px; }
+.voice q { quotes: '“' '”'; }
+
+.chain-box { grid-area: chain; background: #f1f8f6; border: 2px solid #cfe5df; border-radius: 18px; padding: 14px; min-width: 0; align-self: start; }
+.chain-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 4px 10px; margin-bottom: 6px; }
+.chain-head h4 { font-size: 21px; }
+.chain-state { font-family: var(--font-bold); font-size: 16px; color: var(--teal-800); }
+.chain-state.is-warn { color: #8f3418; }
+.chain-legend { margin: 0 0 10px; font-size: 16px; color: var(--ink-soft); }
+.chain { list-style: none; margin: 0; padding: 0; }
+.node { display: grid; grid-template-columns: 56px 1fr auto; gap: 4px 10px; align-items: center; padding: 8px 10px; border-radius: 14px;
+  background: #fff; border: 2px solid #b9d7cf; transition: border-color .4s, background-color .4s; }
+.node-icon svg { display: block; width: 56px; height: 40px; transition: opacity .6s, filter .6s; }
+.node-name { font-family: var(--font-bold); line-height: 1.25; }
+.node-name small { display: block; font-family: var(--font-body); font-size: 16px; color: var(--ink-soft); }
+.node-status { padding: 2px 10px; border-radius: 999px; background: #e3f2ee; color: var(--teal-800); font-family: var(--font-bold); font-size: 16px; white-space: nowrap; }
+.node-bar { grid-column: 2 / -1; height: 8px; border-radius: 999px; background: #d8ebe6; overflow: hidden; }
+.node-bar i { display: block; height: 100%; width: 50%; border-radius: inherit; background: var(--teal-600); transition: width .8s var(--ease); }
+.node[data-tone="warn"] { border-color: var(--coral-700); background: #fff8f4; }
+.node[data-tone="warn"] .node-status { background: #ffe6dc; color: #8f3418; }
+.node[data-tone="warn"] .node-bar i { background: var(--coral-700); }
+.node[data-tone="good"] { border-color: var(--teal-500); background: #f4fcf9; }
+.node[data-state="down"] .node-icon svg { opacity: .55; }
+.node[data-state="gone"] { border-style: dashed; border-color: #8a8f96; background: #f1f1f1; }
+.node[data-state="gone"] .node-icon svg { opacity: .3; filter: grayscale(1); }
+.node[data-state="gone"] .node-status { background: #e2e2e2; color: #333; }
+.node[data-state="gone"] .node-bar i { background: #8a8f96; }
+.node.is-shaking { animation: shake .65s ease-in-out; }
+.node.is-glow { animation: glow 1.2s ease-in-out; }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 15% { transform: translateX(-7px) rotate(-1.2deg); } 35% { transform: translateX(6px) rotate(1deg); } 55% { transform: translateX(-4px); } 75% { transform: translateX(3px); } }
+@keyframes glow { 0%, 100% { box-shadow: 0 0 0 0 rgba(42, 157, 143, 0); } 40% { box-shadow: 0 0 0 6px rgba(42, 157, 143, .35); } }
+.link { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 34px; color: var(--teal-800); font-size: 16px; }
+.link svg { width: 22px; height: 28px; flex: none; }
+.link .link-txt { font-family: var(--font-bold); }
+.link.is-broken { color: #5b6068; }
+.link.is-broken svg { opacity: .45; }
+.chain-box.is-balanced .link svg { animation: flow 2.2s ease-in-out infinite; }
+@keyframes flow { 0%, 100% { transform: translateY(2px); opacity: .75; } 50% { transform: translateY(-2px); opacity: 1; } }
+
+.gauges { grid-area: gauges; display: grid; gap: 8px; padding: 12px 12px 14px; background: var(--navy-800); color: var(--on-dark); border-radius: 16px; }
+.gauges-title { margin: 0; font-family: var(--font-bold); font-size: 16px; color: var(--on-dark-soft); }
+.gauge { display: grid; grid-template-columns: 6.4em minmax(0, 1fr) 4.2em; gap: 2px 8px; align-items: center; }
+.gauge-label .g-ico { display: none; }
+.gauge-label { font-family: var(--font-bold); font-size: 16px; white-space: nowrap; }
+.gauge-track { height: 12px; border-radius: 999px; overflow: hidden; }
+.gauge-track i { display: block; height: 100%; width: 0; border-radius: inherit; transition: width .9s var(--ease); }
+.gauge--safety .gauge-track { background: var(--g-safety-track); } .gauge--safety .gauge-track i { background: var(--g-safety); }
+.gauge--eco .gauge-track { background: var(--g-eco-track); } .gauge--eco .gauge-track i { background: var(--g-eco); }
+.gauge--shark .gauge-track { background: var(--g-shark-track); } .gauge--shark .gauge-track i { background: var(--g-shark); }
+.gauge-num { display: flex; align-items: baseline; justify-content: flex-end; gap: 4px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.gauge-value { font-family: var(--font-bold); font-size: 18px; }
+.gauge-delta { font-size: 16px; color: var(--on-dark-soft); min-width: 2.4em; text-align: right; }
+
+.sim-result { margin-top: 16px; }
+.sim-result h3 { font-size: clamp(21px, 3.2vw, 27px); margin-bottom: 8px; outline: none; }
+.result-values { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; padding: 0; list-style: none; }
+.result-values li { padding: 6px 12px; border-radius: 12px; background: var(--paper-2); border: 1px solid var(--sand-300); }
+.reflection { margin: 12px 0 0; padding: 12px 14px; border-radius: 14px; background: var(--teal-100); color: var(--teal-800); font-family: var(--font-bold); }
+.result-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+.table-wrap { overflow-x: auto; margin-top: 14px; -webkit-overflow-scrolling: touch; }
+.data-table { width: 100%; border-collapse: collapse; min-width: 420px; }
+.data-table caption { text-align: left; font-family: var(--font-bold); margin-bottom: 6px; }
+.data-table th, .data-table td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+.data-table thead th { background: var(--paper-2); font-family: var(--font-bold); }
+.data-table td.num { text-align: right; font-variant-numeric: tabular-nums; font-family: var(--font-bold); }
+.sim-note { color: var(--on-dark-soft); margin: 14px 0 0; }
+.sim-result .data-table { min-width: 0; }
+.reflection.is-done { background: #fff1ea; color: #8f3418; }
+.need-flash { animation: needFlash 1.6s ease; border-radius: 16px; }
+@keyframes needFlash { 0%, 100% { box-shadow: 0 0 0 0 rgba(255, 209, 102, 0); } 25%, 65% { box-shadow: 0 0 0 5px rgba(255, 209, 102, .95); } }
+.q-panel, .sim, .sim-result, .panel, .field, fieldset, .choices { scroll-margin-top: 120px; }
+
+/* ================================================================
+   3단계: 나의 선택과 이유
+   ================================================================ */
+.frames { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 10px; }
+.frames-title { flex-basis: 100%; font-family: var(--font-bold); color: var(--teal-800); }
+.frame-btn { min-height: 44px; padding: 6px 14px; border-radius: 12px; border: 2px dashed var(--teal-700); background: var(--teal-100); color: var(--teal-800); cursor: pointer; text-align: left; }
+.frame-btn:hover { background: #c9ece6; }
+.frame-btn.is-all { border-style: solid; font-family: var(--font-bold); }
+.counter { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px; margin-top: 6px; color: var(--ink-soft); }
+.counter .ok { color: var(--teal-800); font-family: var(--font-bold); }
+.counter .need { color: #8f3418; font-family: var(--font-bold); }
+
+/* ================================================================
+   4단계: 공존의 의미
+   ================================================================ */
+.closing { display: grid; gap: 16px; align-items: center; }
+.closing-bk { width: min(230px, 62vw); margin: 0 auto; }
+.closing-bk svg { display: block; width: 100%; height: auto; }
+.bubble { position: relative; background: #fff; border: 2px solid var(--sand-200); border-radius: 22px; padding: 18px 20px; }
+.bubble::before { content: ''; position: absolute; left: 50%; top: -12px; width: 20px; height: 20px; margin-left: -10px; background: #fff;
+  border-left: 2px solid var(--sand-200); border-top: 2px solid var(--sand-200); transform: rotate(45deg); }
+.bubble-who { font-family: var(--font-bold); margin-bottom: 6px; }
+.think { margin-top: 12px; padding: 10px 14px; border-radius: 14px; background: var(--teal-100); color: var(--teal-800); font-family: var(--font-bold); }
+.meaning { margin-top: 16px; padding: clamp(18px, 3vw, 28px); border-radius: var(--radius-lg); color: #fff; box-shadow: var(--shadow);
+  background: linear-gradient(135deg, var(--teal-700) 0%, var(--navy-700) 100%); }
+.meaning h3 { font-size: clamp(24px, 4vw, 32px); color: #ffe9c7; }
+.meaning-points { list-style: none; margin: 14px 0; padding: 0; display: grid; gap: 10px; }
+.meaning-points li { padding: 14px 16px; border-radius: 16px; background: rgba(6, 20, 40, .28); border: 1px solid rgba(255, 255, 255, .18); }
+.meaning-points .mp-icon { font-size: 26px; line-height: 1; }
+.meaning-points .mp-title { display: block; font-family: var(--font-bold); font-size: 18px; margin: 6px 0 2px; color: #fff; }
+.meaning-points .mp-text { color: #e4eef5; }
+.meaning-def { margin: 0; padding: 14px 16px; border-radius: 16px; background: var(--paper); color: var(--ink); font-family: var(--font-bold); font-size: clamp(18px, 2.6vw, 22px); line-height: 1.55; }
+
+/* ================================================================
+   5단계: 활동 카드
+   ================================================================ */
+.card-stage { display: grid; justify-items: center; }
+.activity-card { width: 100%; max-width: 700px; background: #fffaf1; color: var(--ink); border-radius: 26px; overflow: hidden; box-shadow: var(--shadow); }
+.ac-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 20px 22px; color: #fff; background: linear-gradient(135deg, #0b2545 0%, #0f6e70 100%); }
+.ac-kicker { margin: 0; font-family: var(--font-bold); font-size: 16px; color: #bfe9e2; }
+.ac-name { margin: 4px 0 2px; font-family: var(--font-title); font-size: clamp(24px, 4.6vw, 32px); color: #fff3dc; }
+.ac-date { margin: 0; font-size: 16px; color: #d3e2ee; }
+.ac-bk { width: clamp(96px, 22vw, 130px); }
+.ac-bk svg { display: block; width: 100%; height: auto; }
+.ac-body { display: grid; gap: 12px; padding: 18px 20px 6px; }
+.ac-row { padding: 12px 14px; border-radius: 16px; background: #fff; border: 2px solid var(--sand-200); }
+.ac-row h4 { margin: 0 0 6px; font-family: var(--font-bold); font-size: 16px; color: var(--teal-800); }
+.ac-row p { margin: 0; }
+.ac-grid2 { display: grid; gap: 12px; }
+.ac-emos { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; font-family: var(--font-bold); }
+.ac-emo { font-size: 28px; line-height: 1; }
+.ac-arrow { color: var(--ink-mute); }
+.ac-quote { margin-top: 8px !important; color: var(--ink-soft); }
+.ac-choice { display: inline-block; padding: 4px 14px; border-radius: 999px; background: var(--coral-400); color: var(--ink); font-family: var(--font-title); font-size: 19px; }
+.ac-small { margin-top: 6px !important; font-size: 16px; color: var(--ink-soft); }
+.ac-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.ac-tag { padding: 3px 10px; border-radius: 999px; background: var(--teal-100); color: var(--teal-800); font-size: 16px; font-family: var(--font-bold); }
+.ac-text { white-space: pre-wrap; }
+.ac-meaning { background: #f2faf8; border-color: #cfe5df; }
+.ac-pledge { background: #fff1ea; border-color: var(--coral-300); }
+.ac-foot { margin: 0; padding: 12px 22px 18px; text-align: center; font-size: 16px; color: var(--ink-soft); }
+.card-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 18px; }
+.card-help { text-align: center; color: var(--on-dark-soft); margin: 12px 0 0; }
+
+/* ================================================================
+   창(모달), 알림
+   ================================================================ */
+.modal { position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(4, 14, 28, .7); }
+.modal-box { position: relative; width: min(560px, 100%); max-height: calc(100vh - 32px); max-height: calc(100dvh - 32px); overflow: auto; overscroll-behavior: contain;
+  padding: 20px; border-radius: 22px; background: var(--paper); color: var(--ink); box-shadow: var(--shadow); animation: pop .25s var(--ease); }
+.modal-box--wide { width: min(1040px, 100%); }
+.modal-box--sm { width: min(440px, 100%); }
+@keyframes pop { from { opacity: 0; transform: translateY(12px) scale(.98); } to { opacity: 1; transform: none; } }
+.modal-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
+.modal-head h2 { font-size: clamp(22px, 3.4vw, 28px); }
+.close-btn { flex: none; width: 44px; height: 44px; border-radius: 50%; border: 2px solid var(--line); background: #fff; cursor: pointer; font-size: 20px; line-height: 1; color: var(--ink); }
+.close-btn:hover { background: var(--paper-2); }
+.modal-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; margin-top: 16px; }
+.pw-error { min-height: 1.6em; margin: 8px 0 0; color: #9b2c12; font-family: var(--font-bold); }
+.preview-img { display: block; width: 100%; height: auto; margin-top: 10px; border-radius: 14px; border: 1px solid var(--line); }
+.text-out { width: 100%; min-height: 220px; margin-top: 10px; font-size: 16px; }
+
+.tabs { display: flex; flex-wrap: wrap; gap: 4px; border-bottom: 2px solid var(--line); margin-bottom: 16px; }
+.tab { min-height: 46px; padding: 8px 14px; border: 0; border-bottom: 4px solid transparent; margin-bottom: -2px; background: none; color: var(--ink-soft); font-family: var(--font-bold); cursor: pointer; }
+.tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--coral-700); }
+.tab:hover { color: var(--ink); }
+.tp h3 { font-size: 21px; margin: 18px 0 8px; }
+.tp h3:first-child { margin-top: 0; }
+.tp ul, .tp ol { padding-left: 1.3em; margin: 0; }
+.tp li + li { margin-top: 4px; }
+.tp small { font-size: 16px; color: var(--ink-soft); }
+.notice { padding: 10px 14px; border-radius: 12px; background: #fff4d6; border: 1px solid #e6c46a; color: #5c4300; }
+.notice + .notice { margin-top: 8px; }
+.badges { display: flex; flex-wrap: wrap; gap: 6px; }
+.badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 999px; font-family: var(--font-bold); font-size: 16px; }
+.badge.is-ok { background: #dff3e4; color: #1d5e33; border: 1px solid #8cc79d; }
+.badge.is-no { background: #f0eee9; color: #55524b; border: 1px dashed #b5b0a5; }
+.evidence { margin: 4px 0 0; font-size: 16px; color: var(--ink-soft); }
+.summary-dl { display: grid; grid-template-columns: minmax(7em, max-content) 1fr; gap: 8px 14px; margin: 0; }
+.summary-dl dt { font-family: var(--font-bold); color: var(--teal-800); }
+.summary-dl dd { margin: 0; white-space: pre-wrap; }
+.records { display: grid; gap: 10px; margin-top: 12px; }
+.record { padding: 12px 14px; border-radius: 16px; border: 2px solid var(--line); background: #fff; }
+.record-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 12px; align-items: baseline; }
+.record-name { font-family: var(--font-bold); font-size: 18px; }
+.record-meta { font-size: 16px; color: var(--ink-soft); }
+.record-path { margin: 6px 0; }
+.record details { margin-top: 8px; }
+.record summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; font-family: var(--font-bold); color: var(--teal-800); }
+.status-pill { display: inline-block; padding: 1px 10px; border-radius: 999px; font-size: 16px; font-family: var(--font-bold); background: var(--sand-100); border: 1px solid var(--sand-300); }
+.status-pill.is-done { background: var(--teal-100); border-color: #9fd6cc; color: var(--teal-800); }
+.tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+.toast { position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); z-index: 260; max-width: min(520px, calc(100% - 32px));
+  padding: 12px 18px; border-radius: 14px; background: var(--navy-800); color: #fff; border: 1px solid rgba(127, 209, 199, .4); box-shadow: var(--shadow);
+  opacity: 0; transform: translate(-50%, 16px); pointer-events: none; transition: opacity .25s, transform .25s; }
+.toast.is-show { opacity: 1; transform: translate(-50%, 0); }
+
+/* ================================================================
+   SVG 움직임
+   ================================================================ */
+.a-float { animation: float 4.6s ease-in-out infinite; }
+.a-tail { transform-box: fill-box; transform-origin: 100% 50%; animation: tail 1.8s ease-in-out infinite; }
+.a-sway { transform-box: fill-box; transform-origin: 50% 100%; animation: sway 5.5s ease-in-out infinite; }
+.a-swim { animation: swim 7s ease-in-out infinite; }
+.a-swim-l { animation: swimL 7s ease-in-out infinite; }
+.a-glide { transform-box: fill-box; transform-origin: 50% 50%; animation: glide 3.4s ease-in-out infinite; }
+.a-bob { animation: bob 3.2s ease-in-out infinite; }
+.a-bubble { animation: bubble 6s linear infinite; }
+.a-fall { animation: fall 2.6s linear infinite; }
+.a-noise { transform-box: fill-box; transform-origin: 50% 50%; animation: noise .9s ease-in-out infinite; }
+.a-ripple { transform-box: fill-box; transform-origin: 50% 50%; animation: ripple 2.4s ease-out infinite; }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+@keyframes tail { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-8deg); } }
+@keyframes sway { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+@keyframes swim { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(16px); } }
+@keyframes swimL { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-16px); } }
+@keyframes glide { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(.82); } }
+@keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
+@keyframes bubble { from { transform: translateY(0); opacity: .9; } to { transform: translateY(-110px); opacity: 0; } }
+@keyframes fall { from { transform: translateY(0); opacity: 1; } to { transform: translateY(120px); opacity: 0; } }
+@keyframes noise { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.12); } }
+@keyframes ripple { from { transform: scale(.6); opacity: .9; } to { transform: scale(1.5); opacity: 0; } }
+
+/* 이미지 저장(캡처) 중에는 움직임을 멈춰 카드가 그대로 찍히게 함 */
+.capturing *, .capturing *::before, .capturing *::after { animation: none !important; transition: none !important; }
+
+/* ================================================================
+   반응형: 태블릿(768px~), 데스크톱(1200px~)
+   ================================================================ */
+@media (min-width: 480px) {
+  .gauge { grid-template-columns: 8.2em minmax(0, 1fr) 4.4em; }
+  .gauge-label .g-ico { display: inline; }
+  .brand-name { display: inline; }
+  .teacher-btn .t-txt { display: inline; }
+}
+@media (min-width: 600px) {
+  .ac-grid2 { grid-template-columns: 1fr 1fr; }
+  .opt-grid--two { grid-template-columns: 1fr 1fr; }
+}
+@media (min-width: 768px) {
+  body { font-size: 18px; }
+  .topbar-inner { padding: 8px 16px 10px; gap: 8px 12px; }
+  .steps { order: 3; flex-basis: 100%; }
+  .teacher-btn { margin-left: auto; }
+  .steps ol { gap: 6px; }
+  .step-btn { justify-content: flex-start; padding: 5px 8px; }
+  .step-label { display: block; }
+  .progress-now { display: none; }
+  main { padding: 26px 24px 64px; }
+  .emo-grid { grid-template-columns: 1fr 1fr; }
+  .choices { grid-template-columns: 1fr 1fr; }
+  .choice { grid-template-columns: 1fr; }
+  .gauges { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; padding: 14px 18px; }
+  .gauges-title { grid-column: 1 / -1; }
+  .gauge { grid-template-columns: minmax(0, 1fr) auto; }
+  .gauge-track { grid-column: 1 / -1; grid-row: 2; }
+  .closing { grid-template-columns: 220px 1fr; }
+  .bubble::before { left: -12px; top: 50%; margin: -10px 0 0; border: 0; border-left: 2px solid var(--sand-200); border-bottom: 2px solid var(--sand-200); }
+  .meaning-points { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .situation { grid-template-columns: 120px 1fr; }
+  .situation-bk svg { width: 120px; }
+  .dots { order: 0; flex-basis: auto; }
+  .start-steps { grid-template-columns: 1fr; }
+}
+@media (min-width: 900px) {
+  .start { grid-template-columns: 1.1fr .9fr; min-height: calc(100vh - 160px); }
+  .slide { display: grid; grid-template-columns: 1.4fr 1fr; min-height: 440px; }
+  .slide.slide--compare { display: block; min-height: 0; }
+  .slide-scene { min-height: 100%; }
+  .slide-scene > svg { position: absolute; inset: 0; height: 100%; }
+  .slide-body { padding: 26px 26px 28px; align-self: center; }
+  .compare-layout { grid-template-columns: 1.35fr 1fr; align-items: center; padding: 22px; }
+  .choice { grid-template-columns: 92px 1fr; }
+  .choice-icon svg { width: 92px; }
+}
+@media (min-width: 1000px) {
+  .sim-body { grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr); grid-template-areas: "scene chain" "event chain" "gauges gauges"; }
+}
+@media (min-width: 1100px) {
+  .topbar-inner { flex-wrap: nowrap; padding: 10px 16px; }
+  .steps { order: 0; flex-basis: auto; }
+  .teacher-btn { margin-left: 0; }
+}
+@media (min-width: 1200px) {
+  body { font-size: 18px; }
+  .step-name { font-size: 17px; }
+}
+
+/* 움직임 줄이기 설정 */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
+  .ocean .ob, .ocean .ray { display: none; }
+}
+@supports not (clip-path: inset(0 1px 0 0)) {
+  .compare-before { right: auto; width: var(--pos); overflow: hidden; }
+  .compare-before > svg { width: auto; height: 100%; max-width: none; }
+}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">본문으로 건너뛰기</a>
+
+<div class="ocean" aria-hidden="true">
+  <span class="ray" style="left:6%"></span>
+  <span class="ray" style="left:34%;animation-delay:-4s"></span>
+  <span class="ray" style="left:62%;animation-delay:-7s"></span>
+  <span class="ray" style="left:86%;animation-delay:-2s"></span>
+  <span class="ob" style="left:5%;width:14px;height:14px;animation-duration:15s;animation-delay:-3s"></span>
+  <span class="ob" style="left:15%;width:9px;height:9px;animation-duration:11s;animation-delay:-8s"></span>
+  <span class="ob" style="left:27%;width:18px;height:18px;animation-duration:18s;animation-delay:-1s"></span>
+  <span class="ob" style="left:41%;width:8px;height:8px;animation-duration:12s;animation-delay:-6s"></span>
+  <span class="ob" style="left:55%;width:13px;height:13px;animation-duration:16s;animation-delay:-10s"></span>
+  <span class="ob" style="left:68%;width:10px;height:10px;animation-duration:13s;animation-delay:-4s"></span>
+  <span class="ob" style="left:79%;width:16px;height:16px;animation-duration:17s;animation-delay:-12s"></span>
+  <span class="ob" style="left:92%;width:9px;height:9px;animation-duration:12s;animation-delay:-2s"></span>
+</div>
+
+<div class="app">
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="brand-logo" id="brand-logo"></span><span class="brand-name">부캉이의 바다</span></div>
+      <nav class="steps" aria-label="활동 단계"><ol id="steps"></ol></nav>
+      <button type="button" class="teacher-btn" id="teacher-btn" aria-haspopup="dialog"><span aria-hidden="true">🔒</span><span class="t-txt">교사용</span><span class="sr-only">교사용 화면 열기</span></button>
+      <p class="progress-now" id="progress-now"></p>
+    </div>
+    <div class="progress-track" aria-hidden="true"><i id="progress-fill"></i></div>
+  </header>
+
+  <main id="main" tabindex="-1">
+
+    <!-- 0단계: 시작 -->
+    <section class="screen" id="screen-0" data-screen="0" aria-labelledby="s0-title" hidden>
+      <div class="start">
+        <div class="start-hero">
+          <div class="start-bk" id="start-bk"></div>
+          <h1 class="start-title" id="s0-title" tabindex="-1"></h1>
+          <p class="start-sub" id="start-sub"></p>
+        </div>
+        <div class="panel start-panel">
+          <h2>활동을 시작해요</h2>
+          <div class="field">
+            <label for="student-name">이름 또는 번호 <span class="opt">(선택)</span></label>
+            <input id="student-name" class="input" type="text" maxlength="30" autocomplete="off">
+          </div>
+          <div class="start-actions">
+            <button type="button" class="btn btn-primary btn-lg btn-block" id="start-btn">시작하기</button>
+            <button type="button" class="link-btn" id="new-start-btn" hidden>새로 시작하기</button>
+          </div>
+          <p class="start-meta" id="start-meta"></p>
+          <ol class="start-steps" id="start-steps"></ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- 1단계: 부캉이의 이야기 -->
+    <section class="screen" id="screen-1" data-screen="1" aria-labelledby="s1-title" hidden>
+      <header class="screen-head">
+        <p class="eyebrow" data-eyebrow="1"></p>
+        <h2 id="s1-title" tabindex="-1" data-title="1"></h2>
+        <p class="lead" data-lead="1"></p>
+      </header>
+
+      <div class="carousel" id="story" aria-roledescription="carousel" aria-label="부캉이의 이야기 카드">
+        <div class="carousel-viewport" id="story-viewport">
+          <div class="carousel-track" id="story-track"></div>
+        </div>
+        <div class="carousel-controls">
+          <button type="button" class="btn btn-ghost-dark" id="story-prev"><span aria-hidden="true">◀</span> 이전 카드</button>
+          <div class="dots" id="story-dots" role="group" aria-label="카드 바로 가기"></div>
+          <button type="button" class="btn btn-primary" id="story-next">다음 카드 <span aria-hidden="true">▶</span></button>
+        </div>
+        <p class="sr-only" id="story-live" aria-live="polite"></p>
+      </div>
+
+      <div class="panel q-panel" id="q1-panel" hidden>
+        <span class="q-badge">발문 1</span>
+        <h3 class="q-title" id="q1-title" tabindex="-1"></h3>
+        <div class="emo-grid">
+          <fieldset>
+            <legend class="emo-legend" id="emo-before-legend"></legend>
+            <div class="emo-options" id="emo-before"></div>
+          </fieldset>
+          <fieldset>
+            <legend class="emo-legend" id="emo-after-legend"></legend>
+            <div class="emo-options" id="emo-after"></div>
+          </fieldset>
+        </div>
+        <div class="field">
+          <label for="q1-text" id="q1-label"></label>
+          <input id="q1-text" class="input" type="text" maxlength="120" autocomplete="off">
+        </div>
+      </div>
+
+      <div class="screen-nav">
+        <button type="button" class="btn btn-ghost-dark" data-prev><span aria-hidden="true">◀</span> 이전</button>
+        <button type="button" class="btn btn-primary btn-lg" data-next>다음 단계 <span aria-hidden="true">▶</span></button>
+        <p class="nav-hint"></p>
+      </div>
+    </section>
+
+    <!-- 2단계: 포획 vs 공존 시뮬레이션 -->
+    <section class="screen" id="screen-2" data-screen="2" aria-labelledby="s2-title" hidden>
+      <header class="screen-head">
+        <p class="eyebrow" data-eyebrow="2"></p>
+        <h2 id="s2-title" tabindex="-1" data-title="2"></h2>
+        <p class="lead" data-lead="2"></p>
+      </header>
+
+      <div class="panel situation">
+        <div class="situation-bk" id="situation-bk"></div>
+        <div>
+          <p class="situation-tag" id="situation-tag"></p>
+          <h3 id="situation-text"></h3>
+          <p id="situation-sub"></p>
+        </div>
+      </div>
+
+      <div class="choices" id="choices" role="group" aria-label="우리 마을의 선택"></div>
+
+      <div class="sim" id="sim" hidden>
+        <div class="sim-panel">
+          <div class="sim-top">
+            <h3 class="sim-title" id="sim-title" tabindex="-1"></h3>
+            <div class="sim-controls">
+              <button type="button" class="icon-btn" id="sim-prev" aria-label="이전 해 보기"><span aria-hidden="true">◀</span></button>
+              <button type="button" class="icon-btn is-primary" id="sim-play" aria-label="일시 정지"><span aria-hidden="true">❚❚</span></button>
+              <button type="button" class="icon-btn" id="sim-next" aria-label="다음 해 보기"><span aria-hidden="true">▶</span></button>
+              <button type="button" class="icon-btn" id="sim-replay" aria-label="처음부터 다시 보기"><span aria-hidden="true">↺</span></button>
+            </div>
+          </div>
+          <ol class="years" id="sim-years" aria-label="연도 선택"></ol>
+          <div class="sim-body">
+            <div class="sim-scene" id="sim-scene"></div>
+            <div class="gauges" id="gauges" role="group" aria-labelledby="gauges-title"></div>
+            <div class="sim-event" id="sim-event" aria-live="polite"></div>
+            <div class="chain-box" id="chain-box"></div>
+          </div>
+        </div>
+        <div class="panel sim-result" id="sim-result" hidden></div>
+      </div>
+
+      <p class="sim-note" id="sim-note"></p>
+
+      <div class="screen-nav">
+        <button type="button" class="btn btn-ghost-dark" data-prev><span aria-hidden="true">◀</span> 이전</button>
+        <button type="button" class="btn btn-primary btn-lg" data-next>다음 단계 <span aria-hidden="true">▶</span></button>
+        <p class="nav-hint"></p>
+      </div>
+    </section>
+
+    <!-- 3단계: 나의 선택과 이유 -->
+    <section class="screen" id="screen-3" data-screen="3" aria-labelledby="s3-title" hidden>
+      <header class="screen-head">
+        <p class="eyebrow" data-eyebrow="3"></p>
+        <h2 id="s3-title" tabindex="-1" data-title="3"></h2>
+        <p class="lead" data-lead="3"></p>
+      </header>
+
+      <div class="panel">
+        <fieldset id="final-fieldset">
+          <legend class="block-title" id="final-legend"></legend>
+          <div class="opt-grid opt-grid--two" id="final-options"></div>
+        </fieldset>
+      </div>
+
+      <div class="panel">
+        <fieldset id="tags-fieldset">
+          <legend class="block-title" id="tags-legend"></legend>
+          <p class="help" id="tags-help"></p>
+          <div class="chips" id="tag-list"></div>
+          <div class="field" id="tag-etc-field" hidden>
+            <label for="tag-etc">기타: 내가 고려한 것</label>
+            <input id="tag-etc" class="input" type="text" maxlength="40" autocomplete="off">
+          </div>
+        </fieldset>
+      </div>
+
+      <div class="panel">
+        <label class="block-title" for="reason" id="reason-label"></label>
+        <p class="help" id="reason-help"></p>
+        <div class="frames" id="frames" role="group" aria-labelledby="frames-title">
+          <span class="frames-title" id="frames-title">✍️ 생각 도우미 문장틀 (누르면 입력칸에 들어가요)</span>
+        </div>
+        <textarea id="reason" class="textarea" rows="5" maxlength="500" aria-describedby="reason-help reason-counter"></textarea>
+        <div class="counter" id="reason-counter"></div>
+      </div>
+
+      <div class="screen-nav">
+        <button type="button" class="btn btn-ghost-dark" data-prev><span aria-hidden="true">◀</span> 이전</button>
+        <button type="button" class="btn btn-primary btn-lg" data-next>다음 단계 <span aria-hidden="true">▶</span></button>
+        <p class="nav-hint"></p>
+      </div>
+    </section>
+
+    <!-- 4단계: 공존의 의미 -->
+    <section class="screen" id="screen-4" data-screen="4" aria-labelledby="s4-title" hidden>
+      <header class="screen-head">
+        <p class="eyebrow" data-eyebrow="4"></p>
+        <h2 id="s4-title" tabindex="-1" data-title="4"></h2>
+        <p class="lead" data-lead="4"></p>
+      </header>
+
+      <div class="panel closing">
+        <div class="closing-bk" id="closing-bk"></div>
+        <div class="bubble" id="closing-bubble"></div>
+      </div>
+
+      <div class="meaning" id="meaning"></div>
+
+      <div class="panel q-panel" style="margin-top:16px">
+        <span class="q-badge">발문 2</span>
+        <h3 class="q-title" id="q2-title"></h3>
+        <div class="field">
+          <label for="q2-text" id="q2-label"></label>
+          <input id="q2-text" class="input" type="text" maxlength="150" autocomplete="off">
+        </div>
+      </div>
+
+      <div class="panel">
+        <fieldset id="pledge-fieldset">
+          <legend class="block-title" id="pledge-legend"></legend>
+          <div class="opt-grid" id="pledge-options"></div>
+          <div class="field" id="pledge-custom-field" hidden>
+            <label for="pledge-custom">나의 다짐 직접 쓰기</label>
+            <input id="pledge-custom" class="input" type="text" maxlength="80" autocomplete="off">
+          </div>
+        </fieldset>
+      </div>
+
+      <div class="screen-nav">
+        <button type="button" class="btn btn-ghost-dark" data-prev><span aria-hidden="true">◀</span> 이전</button>
+        <button type="button" class="btn btn-primary btn-lg" data-next>활동 카드 만들기 <span aria-hidden="true">▶</span></button>
+        <p class="nav-hint"></p>
+      </div>
+    </section>
+
+    <!-- 5단계: 나의 활동 카드 -->
+    <section class="screen" id="screen-5" data-screen="5" aria-labelledby="s5-title" hidden>
+      <header class="screen-head">
+        <p class="eyebrow" data-eyebrow="5"></p>
+        <h2 id="s5-title" tabindex="-1" data-title="5"></h2>
+        <p class="lead" data-lead="5"></p>
+      </header>
+
+      <div class="card-stage"><article class="activity-card" id="activity-card" aria-label="나의 활동 카드"></article></div>
+
+      <div class="card-actions">
+        <button type="button" class="btn btn-primary" id="save-image"><span aria-hidden="true">🖼️</span> <span class="btn-txt">이미지로 저장</span></button>
+        <button type="button" class="btn btn-light" id="copy-text"><span aria-hidden="true">📋</span> 텍스트 복사</button>
+        <button type="button" class="btn btn-ghost-dark" id="restart-btn"><span aria-hidden="true">↺</span> 처음부터 다시</button>
+      </div>
+      <p class="card-help" id="card-help"></p>
+
+      <div class="screen-nav">
+        <button type="button" class="btn btn-ghost-dark" data-prev><span aria-hidden="true">◀</span> 이전</button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- 교사용: 비밀번호 -->
+<div class="modal" id="pw-modal" hidden>
+  <div class="modal-box modal-box--sm" role="dialog" aria-modal="true" aria-labelledby="pw-title">
+    <div class="modal-head">
+      <h2 id="pw-title">교사용 화면</h2>
+      <button type="button" class="close-btn" data-close aria-label="닫기">✕</button>
+    </div>
+    <form id="pw-form" novalidate>
+      <div class="field" style="margin-top:0">
+        <label for="pw-input">비밀번호를 입력하세요</label>
+        <input id="pw-input" class="input" type="password" inputmode="numeric" autocomplete="off" maxlength="30">
+      </div>
+      <p class="pw-error" id="pw-error" role="alert"></p>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" data-close>취소</button>
+        <button type="submit" class="btn btn-primary">열기</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- 교사용 패널 -->
+<div class="modal" id="teacher-modal" hidden>
+  <div class="modal-box modal-box--wide" role="dialog" aria-modal="true" aria-labelledby="teacher-title">
+    <div class="modal-head">
+      <h2 id="teacher-title">교사용 패널</h2>
+      <button type="button" class="close-btn" data-close aria-label="교사용 패널 닫기">✕</button>
+    </div>
+    <div class="tabs" role="tablist" aria-label="교사용 메뉴">
+      <button type="button" class="tab" role="tab" id="tab-guide" aria-controls="tp-guide" aria-selected="true">수업 안내</button>
+      <button type="button" class="tab" role="tab" id="tab-current" aria-controls="tp-current" aria-selected="false" tabindex="-1">현재 학생</button>
+      <button type="button" class="tab" role="tab" id="tab-records" aria-controls="tp-records" aria-selected="false" tabindex="-1">저장된 기록 <span id="rec-count"></span></button>
+    </div>
+    <div class="tp" role="tabpanel" id="tp-guide" aria-labelledby="tab-guide" tabindex="0"></div>
+    <div class="tp" role="tabpanel" id="tp-current" aria-labelledby="tab-current" tabindex="0" hidden></div>
+    <div class="tp" role="tabpanel" id="tp-records" aria-labelledby="tab-records" tabindex="0" hidden></div>
+  </div>
+</div>
+
+<!-- 확인 창 -->
+<div class="modal" id="confirm-modal" hidden>
+  <div class="modal-box modal-box--sm" role="alertdialog" aria-modal="true" aria-labelledby="confirm-title" aria-describedby="confirm-msg">
+    <h2 id="confirm-title" style="font-size:24px;margin-bottom:10px"></h2>
+    <p id="confirm-msg"></p>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-secondary" id="confirm-no">취소</button>
+      <button type="button" class="btn btn-primary" id="confirm-yes">확인</button>
+    </div>
+  </div>
+</div>
+
+<!-- 이미지 미리보기 -->
+<div class="modal" id="image-modal" hidden>
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="image-title">
+    <div class="modal-head">
+      <h2 id="image-title">활동 카드 이미지</h2>
+      <button type="button" class="close-btn" data-close aria-label="닫기">✕</button>
+    </div>
+    <p>이미지가 내려받아지지 않으면 이미지를 <b>길게 누르거나</b> 마우스 오른쪽 버튼을 눌러 저장하세요.</p>
+    <img class="preview-img" id="image-preview" alt="나의 활동 카드 이미지">
+    <div class="modal-actions">
+      <a class="btn btn-primary" id="image-download" href="#" download>다시 내려받기</a>
+    </div>
+  </div>
+</div>
+
+<!-- 글 복사용 창 -->
+<div class="modal" id="text-modal" hidden>
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="text-title">
+    <div class="modal-head">
+      <h2 id="text-title">내용 복사하기</h2>
+      <button type="button" class="close-btn" data-close aria-label="닫기">✕</button>
+    </div>
+    <p id="text-desc"></p>
+    <textarea class="textarea text-out" id="text-out" readonly aria-labelledby="text-title"></textarea>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* =====================================================================
+   ✏️ 선생님이 바꿀 수 있는 설정 (자세한 안내는 이 파일 맨 끝의 주석을 보세요)
+   ===================================================================== */
+
+/** 교사용 패널 비밀번호 */
+const TEACHER_PASSWORD = '202647';
+
+/** 단계별 권장 시간 — 진행 표시줄, 시작 화면, 교사 안내에 그대로 나와요. ('3분', '1분 30초'처럼 쓰세요) */
+const STAGE_TIMES = {
+  0: '30초',      // 시작 화면
+  1: '3분',       // 부캉이의 이야기
+  2: '3분',       // 포획 vs 공존 시뮬레이션
+  3: '2분',       // 나의 선택과 이유
+  4: '1분 30초',  // 공존의 의미
+  5: '30초'       // 나의 활동 카드
+};
+
+/**
+ * 화면에 나오는 글을 모두 모아 둔 곳
+ * - {park} {village} {sea} 는 아래 place 의 이름으로 바뀌어요.
+ * - {park:이/가} 처럼 쓰면 이름의 받침에 맞춰 조사가 자동으로 붙어요. (을/를, 은/는, 과/와, 으로/로 등)
+ * - <b>굵게</b> 표시를 쓸 수 있어요.
+ */
+const CONTENT = {
+  place: {
+    village: '우리 마을',
+    park: '친수공원',
+    sea: '앞바다'
+  },
+
+  /* 활동 규칙 */
+  rules: {
+    q1Min: 5,              // 발문 1 한 줄 쓰기 최소 글자 수
+    reasonMin: 20,         // 이유 쓰기 최소 글자 수
+    q2Min: 5,              // 발문 2 최소 글자 수
+    simYearSeconds: 4.5    // 시뮬레이션 1년이 지나가는 시간(초)
+  },
+
+  /* 0단계: 시작 화면 */
+  start: {
+    title: '부캉이의 바다',
+    subtitle: '상어 부캉이의 눈으로 바다를 바라보고, 함께 사는 방법을 찾아봐요',
+    namePlaceholder: '예: 5학년 2반 7번 김바다',
+    meta: '혼자서 차근차근 진행해요. 새로고침해도 하던 곳부터 이어서 할 수 있어요.'
+  },
+
+  /* 단계 이름(진행 표시줄)과 단계 안내 문장 */
+  stages: [
+    { title: '시작하기', short: '시작' },
+    { title: '부캉이의 이야기', short: '이야기', lead: '이야기 카드를 넘기며 부캉이의 눈으로 바다를 바라보세요.' },
+    { title: '포획 vs 공존 시뮬레이션', short: '시뮬레이션', lead: '두 가지 방법 중 하나를 골라, 5년 동안 바다와 마을이 어떻게 달라지는지 살펴보세요.' },
+    { title: '나의 선택과 이유', short: '나의 선택', lead: '두 결과를 떠올리며 나의 최종 선택과 그 이유를 기록해요.' },
+    { title: '공존의 의미', short: '공존의 의미', lead: '부캉이의 이야기를 듣고 공존의 의미를 정리해요.' },
+    { title: '나의 활동 카드', short: '활동 카드', lead: '오늘 나의 생각을 한 장의 카드로 정리했어요.' }
+  ],
+
+  /* 1단계: 부캉이의 이야기 (scene: before / construction / after / people, mood: calm 편안함 · anxious 불안 · lonely 외로움 · relieved 안도) */
+  story: {
+    cards: [
+      {
+        tag: '매립 전', title: '나의 집, 나의 식탁', scene: 'before', mood: 'calm',
+        lines: [
+          '안녕! 나는 상어 부캉이야. 우리 부모님, 할아버지, 할머니가 살던 바다는 얕고 따뜻한 바닷가였어.',
+          '해조류 숲 사이로 작은 물고기들이 반짝이며 헤엄쳤지. 나도 여기서 먹이를 찾고, 해조류 그늘에서 쉬었어.',
+          '그때 바다는 나에게 <b>집이자 식탁</b>이었어.'
+        ]
+      },
+      {
+        tag: '매립 공사', title: '쿵쿵, 흐려지는 바다', scene: 'construction', mood: 'anxious',
+        lines: [
+          '어느 날부터 “쿵! 쿵!” 큰 소리가 들렸어. 커다란 배와 기계가 바다에 흙과 돌을 쏟아부었지.',
+          '물이 뿌옇게 흐려져서 앞이 잘 보이지 않았어. 내가 놀던 얕은 바다는 하루하루 사라졌어.',
+          '나는 무섭고 불안해서 먼 바다로 피했어.'
+        ]
+      },
+      {
+        tag: '매립 후', title: '낯선 콘크리트 벽', scene: 'after', mood: 'lonely',
+        lines: [
+          '시간이 흘러 익숙한 물길을 따라 다시 와 봤어. 해조류 숲이 있던 자리에는 단단한 콘크리트 벽, <b>호안</b>이 서 있었어.',
+          '벽 위에는 {park:이/가} 생겨 사람들이 가득했어. 작은 물고기 친구들은 거의 보이지 않았지.',
+          '분명 내가 살던 곳인데, 왜 이렇게 낯설까?'
+        ]
+      },
+      {
+        tag: '사람들의 반응', title: '“상어가 나타났다!”', scene: 'people', mood: 'anxious',
+        lines: [
+          '먹이를 찾다가 지느러미가 물 위로 살짝 나왔어. 그러자 사람들이 소리쳤어. “상어가 나타났다!”',
+          '놀라서 뛰어가는 사람들을 보고 나도 깜짝 놀랐어. 나는 그저 먹이를 찾으러 왔을 뿐인데….',
+          '사람들도 무섭고, 나도 무서워. 우리는 어떻게 해야 할까?'
+        ]
+      }
+    ],
+    shout: '상어가 나타났다!',          // 4번째 그림 속 말풍선
+    compare: {
+      tag: '비교하기',
+      title: '같은 곳, 달라진 바다',
+      guide: '가운데 손잡이를 좌우로 움직여 매립 전과 매립 후의 바다를 비교해 보세요.',
+      say: '왼쪽은 내가 기억하는 바다, 오른쪽은 지금의 바다야. 무엇이 달라졌는지 찾아볼래?',
+      hint: '↔ 손잡이를 움직여 보세요',
+      beforeLabel: '매립 전',
+      afterLabel: '매립 후',
+      /* before/after: 0~100 상대 점수 (실제 측정값이 아니에요). words: 낮음 / 중간 / 높음일 때 보여 줄 말 */
+      indicators: [
+        { label: '서식 생물 수', icon: '🐟', before: 90, after: 22, words: ['적음', '보통', '많음'] },
+        { label: '먹이량', icon: '🦐', before: 85, after: 28, words: ['적음', '보통', '많음'] },
+        { label: '수심', icon: '🌊', before: 18, after: 84, words: ['얕음', '보통', '깊음'] },
+        { label: '사람 수', icon: '👥', before: 8, after: 92, words: ['적음', '보통', '많음'] }
+      ]
+    }
+  },
+
+  /* 1단계 끝: 교사 발문 1 */
+  q1: {
+    title: '매립 전과 후, 부캉이에게 바다는 어떤 의미였을까요?',
+    beforeLegend: '매립 전, 부캉이의 마음은?',
+    afterLegend: '매립 후, 부캉이의 마음은?',
+    emotions: [
+      { id: 'happy',   emoji: '😊', label: '행복해요' },
+      { id: 'calm',    emoji: '😌', label: '편안해요' },
+      { id: 'anxious', emoji: '😟', label: '불안해요' },
+      { id: 'scared',  emoji: '😨', label: '무서워요' },
+      { id: 'sad',     emoji: '😢', label: '슬퍼요' },
+      { id: 'lonely',  emoji: '😔', label: '외로워요' }
+    ],
+    textLabel: '부캉이에게 바다는 어떤 곳이었을까요? 한 줄로 써 보세요.',
+    placeholder: '예: 매립 전에는 집이자 식탁이었지만, 매립 후에는 …'
+  },
+
+  /* 2단계: 포획 vs 공존 시뮬레이션 (gauges·pop 값은 0~100 상대 점수) */
+  sim: {
+    situationTag: '📢 마을 소식',
+    situation: '{park} 근처에 부캉이가 자주 나타납니다. {village:은/는} 어떻게 해야 할까요?',
+    situationSub: '어느 쪽을 골라도 괜찮아요. 결과를 본 뒤 다른 선택도 살펴볼 수 있어요.',
+    note: '※ 이 시뮬레이션은 생물들이 서로 연결되어 있다는 것을 쉽게 보여 주려고 단순하게 만든 모형이에요. 실제 바다는 훨씬 복잡해요.',
+    gaugesTitle: '변화 지표 (0~100점)',
+    gauges: [
+      { key: 'safety', label: '사람의 안전감', icon: '🧑‍🤝‍🧑' },
+      { key: 'eco',    label: '생태계 건강',   icon: '🌿' },
+      { key: 'shark',  label: '부캉이의 삶',   icon: '🦈' }
+    ],
+    chain: {
+      title: '먹이사슬',
+      arrow: 'up',   // 'up': 먹히는 생물 → 먹는 생물(교과서 방식), 'down': 상어 → 해조류 순서로 화살표
+      legendUp: '화살표는 ‘먹히는 생물 → 먹는 생물’ 방향이에요.',
+      legendDown: '화살표는 ‘먹는 생물 → 먹히는 생물’ 방향이에요.',
+      linkText: '먹이',
+      brokenText: '끊어짐',
+      nodes: [
+        { key: 'shark',   name: '상어',            sub: '부캉이' },
+        { key: 'mid',     name: '중간 포식자',     sub: '가오리·큰 물고기', upIsWarning: true },
+        { key: 'small',   name: '작은 물고기·조개', sub: '' },
+        { key: 'seaweed', name: '해조류',          sub: '해조류 숲' }
+      ],
+      status: { same: '그대로', up: '늘어남 ▲', down: '줄어듦 ▼', gone: '사라짐 ✕' },
+      balanced: '균형을 이루고 있어요',
+      shaky: '균형이 흔들리고 있어요'
+    },
+    /* 선택 직후 ‘지금’의 모습 (두 선택 모두 여기서 시작) */
+    start: {
+      title: '지금의 바다',
+      text: '부캉이가 {park} 근처에 자주 나타나요. 사람들은 불안해하고, 부캉이도 사람들 때문에 불안해요.',
+      who: '주민', say: '상어가 또 나타났대요. 아이들이 물놀이해도 괜찮을까요?',
+      gauges: { safety: 40, eco: 60, shark: 45 },
+      pop: { shark: 60, mid: 50, small: 60, seaweed: 55 },
+      scene: { people: 4, boat: 'none' },
+      mood: 'anxious'
+    },
+    scenarios: {
+      capture: {
+        letter: 'A', title: '포획·퇴치하기', short: '포획',
+        desc: '그물로 잡거나 쫓아내서 사람들 곁에서 상어를 없애요.',
+        actions: ['그물로 잡아 먼 바다로 보내기', '소리와 장비로 쫓아내기'],
+        focus: '사람들의 불안을 빠르게 줄이는 데 중점을 둬요.',
+        years: [
+          { title: '부캉이가 떠났어요',
+            text: '그물로 부캉이를 잡아 먼 바다로 보냈어요. 사람들은 “이제 안심이다” 하며 다시 바닷가를 찾았어요.',
+            who: '주민', say: '이제 마음 놓고 산책할 수 있겠어요!',
+            gauges: { safety: 80, eco: 54, shark: 12 }, pop: { shark: 0, mid: 56, small: 60, seaweed: 55 },
+            scene: { people: 7, boat: 'net' } },
+          { title: '가오리와 큰 물고기가 늘어나요',
+            text: '상어가 사라지자, 상어의 먹이였던 가오리와 큰 물고기가 조금씩 늘어나기 시작했어요.',
+            who: '어린이', say: '요즘 바닷가에서 가오리가 자주 보여요.',
+            gauges: { safety: 85, eco: 47, shark: 10 }, pop: { shark: 0, mid: 70, small: 52, seaweed: 50 },
+            scene: { people: 8, boat: 'none' } },
+          { title: '작은 물고기와 조개가 줄어요',
+            text: '늘어난 가오리와 큰 물고기가 작은 물고기와 조개를 많이 먹었어요. 가오리가 먹이를 찾느라 바닥을 파헤쳐 해조류 숲도 망가졌어요.',
+            who: '어민', say: '조개가 눈에 띄게 줄었어요.',
+            gauges: { safety: 83, eco: 38, shark: 10 }, pop: { shark: 0, mid: 84, small: 38, seaweed: 40 },
+            scene: { people: 7, boat: 'empty' } },
+          { title: '어민들의 그물이 가벼워요',
+            text: '작은 물고기와 조개가 줄어 어민들이 잡는 물고기도 줄었어요. 해조류 숲이 줄어 바닷속이 휑해졌어요.',
+            who: '어민', say: '그물을 올려도 물고기가 별로 없어요.',
+            gauges: { safety: 80, eco: 29, shark: 8 }, pop: { shark: 0, mid: 78, small: 26, seaweed: 30 },
+            scene: { people: 5, boat: 'empty' } },
+          { title: '무너진 균형',
+            text: '먹이사슬의 한 고리가 빠지자 바다 전체의 균형이 무너졌어요. 볼거리가 줄어 관광객도 줄었어요.',
+            who: '주민', say: '다른 상어가 오면 그땐 어떻게 하죠? 우리는 아무것도 배우지 못했어요.',
+            gauges: { safety: 74, eco: 22, shark: 8 }, pop: { shark: 0, mid: 64, small: 20, seaweed: 24 },
+            scene: { people: 3, boat: 'empty' } }
+        ],
+        result: '사람들은 빠르게 안심할 수 있었어요. 하지만 먹이사슬의 한 고리인 상어가 사라지자, 연결된 생물들이 차례로 흔들리며 바다 생태계의 균형이 무너졌어요.'
+      },
+      coexist: {
+        letter: 'B', title: '공존하기', short: '공존',
+        desc: '사람과 상어가 함께 지낼 수 있도록 위험을 줄이는 방법을 찾아요.',
+        actions: ['상어 출현 알림 보내기', '관찰 구역과 수영 구역 나누기', '안전 수칙 안내하기', '서식지 일부 복원하기'],
+        focus: '규칙과 정보로 위험을 줄이며 함께 지내는 데 중점을 둬요.',
+        years: [
+          { title: '함께 사는 규칙을 만들어요',
+            text: '상어 출현 알림을 보내고, 수영 구역과 관찰 구역을 나눴어요. 안전 수칙 안내판도 세웠어요. 처음에는 “무섭다”, “불편하다”는 목소리도 있었어요.',
+            who: '주민', say: '수영할 곳이 줄어서 좀 불편해요.',
+            gauges: { safety: 48, eco: 62, shark: 66 }, pop: { shark: 60, mid: 50, small: 60, seaweed: 56 },
+            scene: { people: 3, boat: 'none', signs: true, zones: true }, mood: 'anxious' },
+          { title: '사고 없이 지내요',
+            text: '사람들이 안전 수칙을 익혔어요. 알림이 오면 물 밖으로 나와 기다려요. 한 번도 사고가 나지 않았어요.',
+            who: '안전요원', say: '알림이 오면 모두 침착하게 물 밖으로 나와요.',
+            gauges: { safety: 62, eco: 66, shark: 72 }, pop: { shark: 60, mid: 51, small: 64, seaweed: 60 },
+            scene: { people: 5, boat: 'none', signs: true, zones: true }, mood: 'calm' },
+          { title: '얕은 바다를 되살려요',
+            text: '얕은 바다 일부에 해조류를 심어 서식지를 복원했어요. 작은 물고기와 조개가 다시 모여들기 시작했어요.',
+            who: '어린이', say: '해조류 사이로 작은 물고기가 보여요!',
+            gauges: { safety: 70, eco: 74, shark: 78 }, pop: { shark: 60, mid: 52, small: 72, seaweed: 72 },
+            scene: { people: 6, boat: 'none', signs: true, zones: true, restore: true }, mood: 'calm' },
+          { title: '먹이사슬이 균형을 이뤄요',
+            text: '상어, 가오리, 작은 물고기, 해조류가 서로 알맞은 수를 유지해요. 어민들의 그물에도 물고기가 다시 들어와요.',
+            who: '어민', say: '물고기가 다시 늘었어요.',
+            gauges: { safety: 75, eco: 81, shark: 82 }, pop: { shark: 60, mid: 52, small: 76, seaweed: 78 },
+            scene: { people: 6, boat: 'full', signs: true, zones: true, restore: true }, mood: 'relieved' },
+          { title: '바다 생태 교실이 열려요',
+            text: '{park:은/는} 바다 생물을 관찰하는 생태 교육 장소가 되었어요. 사람과 부캉이가 서로의 자리를 지키며 지내요.',
+            who: '선생님', say: '오늘은 부캉이가 사는 바다를 관찰해 볼까요?',
+            gauges: { safety: 78, eco: 86, shark: 86 }, pop: { shark: 60, mid: 52, small: 80, seaweed: 82 },
+            scene: { people: 8, boat: 'full', signs: true, zones: true, restore: true, edu: true }, mood: 'relieved' }
+        ],
+        result: '처음에는 불안하고 불편했지만, 안전 수칙과 정보 공유로 사고 없이 지냈어요. 먹이사슬의 균형이 유지되어 바다 생태계가 건강해졌어요.'
+      }
+    },
+    resultTitle: '5년 뒤, {choice:의} 결과',
+    otherButton: '다른 선택도 살펴보기',
+    compareTitle: '두 선택 비교하기 (5년 뒤, 0~100점)',
+    bothDone: '두 선택을 모두 살펴봤어요. 다음 단계에서 나의 최종 선택을 정해요.',
+    reflection: '사람의 안전과 바다 생태계, 둘 다 소중해요. 두 가지를 함께 지킬 방법은 무엇일까요?'
+  },
+
+  /* 3단계: 나의 선택과 이유 */
+  choice: {
+    finalLegend: '두 결과를 살펴본 뒤, 나의 최종 선택은?',
+    tagsLegend: '내가 고려한 것',
+    tagsHelp: '여러 개를 고를 수 있어요.',
+    tags: [
+      { id: 'life',    label: '상어도 살아갈 권리가 있다' },
+      { id: 'chain',   label: '먹이사슬이 연결되어 있다' },
+      { id: 'safety',  label: '사람의 안전' },
+      { id: 'owner',   label: '바다의 원래 주인' },
+      { id: 'future',  label: '미래 세대' },
+      { id: 'economy', label: '마을 경제' },
+      { id: 'etc',     label: '기타' }
+    ],
+    reasonLabel: '왜 그렇게 선택했나요? (2~3문장)',
+    reasonHelp: '내가 고려한 것을 넣어 2~3문장으로 써 보세요. 빈칸(___)은 내 생각으로 바꿔 주세요.',
+    reasonPlaceholder: '생각 도우미 문장틀을 눌러 시작해도 좋아요.',
+    /* {choice:을/를} 은 최종 선택의 짧은 이름(포획/공존)으로 바뀌어요. 아직 고르지 않았으면 ___ 로 남아요. */
+    frames: ['나는 {choice:을/를} 선택했다.', '왜냐하면 ___ 때문이다.', '만약 상어가 사라지면 ___'],
+    frameAllLabel: '문장틀 전체 넣기'
+  },
+
+  /* 4단계: 공존의 의미 */
+  meaning: {
+    closing: {
+      capture: {
+        mood: 'lonely',
+        lines: [
+          '사람들이 무서웠던 마음, 나도 알아. 나도 처음엔 사람들이 정말 무서웠거든. 안전을 지키려는 너의 마음도 소중해.',
+          '그런데 내가 떠난 바다에서 가오리와 작은 물고기, 해조류 친구들은 어떻게 지낼까?'
+        ],
+        think: '💭 생각거리: 사람의 안전을 지키면서 나도 바다에 남을 수 있는 방법은 없을까?'
+      },
+      coexist: {
+        mood: 'relieved',
+        lines: [
+          '내 자리를 인정해 줘서 고마워. 휴, 이제 조금 마음이 놓여.',
+          '사람들의 걱정도 진짜라는 걸 알아. 그래서 서로를 지키는 약속이 꼭 필요해.'
+        ],
+        think: '💭 생각거리: 공존이 계속되려면 우리 마을은 어떤 노력을 이어 가야 할까?'
+      }
+    },
+    title: '공존이란?',
+    points: [
+      { icon: '🏠', title: '서로의 삶의 자리를 인정하기', text: '바다는 상어의 집이고, 바닷가는 사람의 쉼터예요.' },
+      { icon: '🤝', title: '위험을 줄이는 방법을 함께 찾기', text: '출현 알림, 구역 나누기, 안전 수칙처럼요.' },
+      { icon: '🔗', title: '생태계 속에서 연결되어 살기', text: '한 생물이 사라지면 다른 생물도 영향을 받아요.' }
+    ],
+    definition: '공존이란 서로의 삶의 자리를 인정하고, 위험을 줄이는 방법을 함께 찾으며, 생태계 속에서 연결되어 사는 것',
+    q2: '우리가 상어를 쫓아내기만 한다면 자연에는 어떤 일이 일어날까요?',
+    q2Label: '한 문장으로 써 보세요.',
+    q2Placeholder: '예: 상어를 쫓아내기만 하면 …',
+    pledgeLegend: '공존을 위해 내가 할 수 있는 일 한 가지',
+    pledges: [
+      '바다에 쓰레기를 버리지 않을게요.',
+      '바다 생물을 만나면 거리를 두고 조용히 관찰할게요.',
+      '바닷가 안전 수칙을 지키고 가족에게도 알려 줄게요.',
+      '바다 생물과 생태계에 대해 더 알아볼게요.'
+    ],
+    pledgeCustom: '직접 쓰기'
+  },
+
+  /* 5단계: 나의 활동 카드 */
+  card: {
+    kicker: '부캉이의 바다 · 나의 활동 카드',
+    noName: '바다 탐험가',
+    footer: '상어 부캉이와 함께 생각한 공존 이야기 🌊',
+    help: '이미지 저장이 안 되면 [텍스트 복사]를 이용하거나 화면을 캡처하세요.'
+  },
+
+  /* 교사용: 평가 보조 배지 (이유·기타 글과 태그로 자동 표시) */
+  evaluation: {
+    life: {
+      badge: '생명권 고려',
+      tagIds: ['life'],
+      keywords: ['생명', '권리', '살 권리', '살아갈 권리', '생명권', '목숨', '생존']
+    },
+    eco: {
+      badge: '생태계 연결성 고려',
+      tagIds: ['chain'],
+      keywords: ['먹이사슬', '먹이 사슬', '먹이그물', '생태계', '생태', '연결', '균형', '고리']
+    },
+    note: '배지는 관찰을 돕기 위한 자동 표시예요. 학생의 글을 직접 읽고 최종 판단은 선생님이 해 주세요.'
+  },
+
+  /* 교사용: 수업 안내 */
+  teacherGuide: {
+    goal: '상어 부캉이의 시선으로 매립 전후 바다의 변화를 느끼고, 포획과 공존의 결과를 비교하여 생명권과 생태계 연결성을 고려한 판단을 할 수 있다.',
+    flow: [
+      '이름(번호)을 입력하고 시작해요.',
+      '이야기 카드 4장 → 바다 비교 슬라이더 → 발문 1(감정 이모지 + 한 줄 쓰기)',
+      '포획/공존 중 하나를 골라 5년 변화 보기(게이지·먹이사슬) → 다른 선택도 비교',
+      '최종 선택, 고려한 가치 태그, 이유 쓰기(생각 도우미 문장틀)',
+      '부캉이의 마무리 말 → 공존의 의미 정리 → 발문 2 → 나의 다짐',
+      '활동 카드 확인 → 이미지 저장 또는 텍스트 복사'
+    ],
+    evalPoint: '학생이 상어의 생명권과 생태계 연결성을 고려하여 판단하는지 관찰합니다.',
+    tips: [
+      '학생 기록은 이 기기의 브라우저에만 저장되고 서버로 보내지지 않아요. 수업이 끝나면 [저장된 기록] 탭에서 CSV로 내려받아 두세요.',
+      '한 기기를 여러 학생이 쓰면, 활동을 마친 뒤 [처음부터 다시]를 누르게 해 주세요. 앞 학생의 기록은 그대로 남아요.',
+      '시뮬레이션은 단순화한 모형이에요. “실제 바다는 더 복잡하다”는 점을 함께 이야기해 주세요.',
+      '어느 선택도 틀린 답이 아니에요. 선택의 이유와 근거를 중심으로 피드백해 주세요.',
+      '비밀번호는 학생이 실수로 여는 것을 막는 가림막일 뿐, 보안 장치는 아니에요.'
+    ]
+  }
+};
+
+/* =====================================================================
+   🎨 그림 — 외부 이미지 없이 모두 인라인 SVG로 그려요
+   ===================================================================== */
+let uidN = 0;
+const uid = (p) => p + '-' + (++uidN);
+const r1 = (v) => Math.round(v * 10) / 10;
+const SVG_FONT = "GangwonEdu_OTFBoldA, 'Malgun Gothic', sans-serif";
+const SVG_TITLE_FONT = "GangwonEduPowerExtraBoldA, 'Malgun Gothic', sans-serif";
+
+const MOOD_LABEL = { calm: '편안함', anxious: '불안', lonely: '외로움', relieved: '안도' };
+const BK = { body: '#86b2d6', fin: '#6f9ec6', line: '#2c5476', belly: '#f7efe2', cheek: '#f49a85', ink: '#14253d', gill: '#5f8db3' };
+
+/* ---------- 부캉이 (표정: calm 편안함 / anxious 불안 / lonely 외로움 / relieved 안도) ---------- */
+function bukangiFace(mood) {
+  const eye = (r, cy) => `<circle cx="184" cy="${cy}" r="${r}" fill="#fff" stroke="${BK.line}" stroke-width="2.5"/>`;
+  const cheek = (op) => `<ellipse cx="174" cy="93" rx="8.5" ry="5" fill="${BK.cheek}" opacity="${op}"/>`;
+  const line = `fill="none" stroke="${BK.ink}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"`;
+  if (mood === 'relieved') {
+    return cheek(.85)
+      + `<path d="M174 75Q184 63 194 75" ${line} stroke-width="3.5"/>`
+      + `<path d="M194 95Q203 108 212 94Z" fill="#8a3b3b" stroke="${BK.ink}" stroke-width="2.5" stroke-linejoin="round"/>`
+      + `<g fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round"><path d="M221 96q7-5 14-1"/><path d="M223 105q6-2 11 1"/></g>`
+      + `<path d="M200 18l3 7 7 3-7 3-3 7-3-7-7-3 7-3z" fill="#ffd166" stroke="#c98a1a" stroke-width="1"/>`
+      + `<path d="M224 40l2 4.5 4.5 2-4.5 2-2 4.5-2-4.5-4.5-2 4.5-2z" fill="#ffd166" stroke="#c98a1a" stroke-width="1"/>`;
+  }
+  if (mood === 'anxious') {
+    return cheek(.35) + eye(12, 72)
+      + `<circle cx="184" cy="74" r="4.6" fill="${BK.ink}"/><circle cx="185.6" cy="72.4" r="1.6" fill="#fff"/>`
+      + `<path d="M171 56Q181 49 195 55" ${line}/>`
+      + `<path d="M195 99q3.5-4.5 7 0t7 0" ${line}/>`
+      + `<path d="M207 32q7 10 0 15q-7-5 0-15z" fill="#cfeaf7" stroke="${BK.gill}" stroke-width="2"/>`;
+  }
+  if (mood === 'lonely') {
+    return cheek(.3) + eye(11, 73)
+      + `<circle cx="183" cy="77.5" r="6" fill="${BK.ink}"/><circle cx="185" cy="75.5" r="1.8" fill="#fff"/>`
+      + `<path d="M172.4 73A11.6 11.6 0 0 1 195.6 73Z" fill="${BK.body}"/>`
+      + `<path d="M172 73.5Q184 77 196 73.5" ${line} stroke-width="2.6"/>`
+      + `<path d="M182 87q-4.5 7 0 10.5q4.5-3.5 0-10.5z" fill="#a9dcf5" stroke="#4f86b5" stroke-width="1.5"/>`
+      + `<path d="M196 101Q203 95.5 210 101" ${line}/>`;
+  }
+  return cheek(.7) + eye(11, 72)
+    + `<circle cx="186.5" cy="73" r="6.5" fill="${BK.ink}"/><circle cx="189" cy="70" r="2.4" fill="#fff"/>`
+    + `<path d="M195 97Q203 104 211 96" ${line}/>`;
+}
+
+function bukangiParts(mood) {
+  const o = `stroke="${BK.line}" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"`;
+  const body = 'M52 84C60 52 98 36 142 38C184 40 214 62 216 86C218 110 186 126 144 128C100 130 62 116 52 84Z';
+  return `<g class="a-tail"><path d="M66 78C50 66 32 50 14 42C14 60 22 76 34 86C22 96 14 110 14 128C32 120 50 104 66 92Z" fill="${BK.fin}" ${o}/></g>`
+    + `<path d="M112 42C120 26 132 14 148 10C146 22 150 34 160 42Z" fill="${BK.fin}" ${o}/>`
+    + `<path d="${body}" fill="${BK.body}"/>`
+    + `<path d="M72 102C98 114 160 118 212 98C207 114 182 125 144 127C108 129 82 119 72 102Z" fill="${BK.belly}"/>`
+    + `<ellipse cx="116" cy="56" rx="30" ry="8" fill="#ffffff" opacity=".22"/>`
+    + `<path d="${body}" fill="none" ${o}/>`
+    + `<g fill="none" stroke="${BK.gill}" stroke-width="2.5" stroke-linecap="round" opacity=".85"><path d="M148 74q-5 11 0 22"/><path d="M157 72q-5 12 0 25"/></g>`
+    + `<path d="M132 110C128 124 118 136 104 142C120 146 140 136 152 116Z" fill="${BK.fin}" ${o}/>`
+    + bukangiFace(MOOD_LABEL[mood] ? mood : 'calm');
+}
+
+/** 따로 쓰는 부캉이 그림. label 이 '' 이면 장식용(스크린리더에서 숨김) */
+function bukangiSVG(mood, cls, label) {
+  const m = MOOD_LABEL[mood] ? mood : 'calm';
+  const aria = label === '' ? 'aria-hidden="true"' : `role="img" aria-label="${esc(label || '부캉이 (' + MOOD_LABEL[m] + ')')}"`;
+  return `<svg class="bk ${cls || ''}" viewBox="0 0 240 160" ${aria} focusable="false"><g class="a-float">${bukangiParts(m)}</g></svg>`;
+}
+
+/** 장면 속 부캉이 (x, y: 왼쪽 위, s: 크기) */
+function bukangiAt(x, y, s, mood, opt) {
+  opt = opt || {};
+  const t = opt.flip ? `translate(${r1(x + 240 * s)} ${y}) scale(${-s} ${s})` : `translate(${x} ${y}) scale(${s})`;
+  return `<g transform="${t}"><g${opt.still ? '' : ' class="a-float"'}>${bukangiParts(mood)}</g></g>`;
+}
+
+/* ---------- 작은 그림 조각 ---------- */
+const lg = (id, stops) => `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1">${stops.map((s) => `<stop offset="${s[0]}" stop-color="${s[1]}"/>`).join('')}</linearGradient>`;
+
+const fish = (x, y, s, c, flip) => `<g transform="translate(${r1(x)} ${r1(y)}) scale(${flip ? -s : s} ${s})"><path d="M-11 0C-5-7 7-7 11 0C7 7-5 7-11 0Z" fill="${c}"/><path d="M-10 0L-18-6V6Z" fill="${c}"/><circle cx="5" cy="-1.5" r="1.6" fill="#13253d"/></g>`;
+
+function school(x, y, n, c, flip, s) {
+  s = s || 1;
+  const offs = [[0, 0], [20, -11], [22, 11], [42, 0], [-18, 12], [-20, -12]];
+  let out = '';
+  for (let i = 0; i < n; i++) {
+    const o = offs[i % offs.length];
+    out += fish(x + (flip ? -o[0] : o[0]) * s, y + o[1] * s, s * (i % 2 ? .85 : 1), c, flip);
+  }
+  return `<g class="${flip ? 'a-swim-l' : 'a-swim'}" style="animation-delay:-${(x % 7).toFixed(1)}s">${out}</g>`;
+}
+
+function kelp(x, base, h, c, d) {
+  const k1 = r1(base - h * .42), k2 = r1(base - h * .7);
+  return `<g class="a-sway" style="animation-delay:${d || 0}s"><path d="M${x} ${base}C${x - 14} ${r1(base - h * .3)} ${x + 14} ${r1(base - h * .62)} ${x} ${base - h}" fill="none" stroke="${c}" stroke-width="7" stroke-linecap="round"/>`
+    + `<ellipse cx="${x - 8}" cy="${k1}" rx="10" ry="4.5" fill="${c}" transform="rotate(-30 ${x - 8} ${k1})"/>`
+    + `<ellipse cx="${x + 8}" cy="${k2}" rx="10" ry="4.5" fill="${c}" transform="rotate(30 ${x + 8} ${k2})"/></g>`;
+}
+
+const shell = (x, y, c) => `<g transform="translate(${x} ${y})"><path d="M-9 0Q-9-11 0-12Q9-11 9 0Z" fill="${c || '#f2c9a8'}" stroke="#b9805a" stroke-width="1.5"/><path d="M0-12V0M-5-10L-3 0M5-10L3 0" stroke="#b9805a" stroke-width="1.2"/></g>`;
+
+const ray = (x, y, s, flip) => `<g transform="translate(${x} ${y}) scale(${flip ? -s : s} ${s})"><g class="a-glide"><path d="M22 0C12-6 2-26-8-30C-10-16-14-6-18 0C-14 6-10 16-8 30C2 26 12 6 22 0Z" fill="#8c7b6b"/><path d="M-18 0L-44 3" stroke="#8c7b6b" stroke-width="3" stroke-linecap="round"/><path d="M4-12C8-6 8 6 4 12" fill="none" stroke="#a8968a" stroke-width="2"/><circle cx="13" cy="-4" r="2" fill="#13253d"/><circle cx="13" cy="4" r="2" fill="#13253d"/></g></g>`;
+
+const bigFish = (x, y, s, flip) => `<g transform="translate(${x} ${y}) scale(${flip ? -s : s} ${s})"><path d="M-30 0C-18-17 18-18 30 0C18 16-18 15-30 0Z" fill="#4f6f8f"/><path d="M-28 0L-45-13V13Z" fill="#4f6f8f"/><path d="M-6-14Q2-25 12-15Z" fill="#46637f"/><circle cx="18" cy="-3" r="3" fill="#fff"/><circle cx="18.8" cy="-3" r="1.6" fill="#13253d"/><path d="M-12-7Q-8 0-12 7M-2-9Q2 0-2 9" fill="none" stroke="#7d9cba" stroke-width="2"/></g>`;
+
+function person(x, y, c, pose, flip, opt) {
+  opt = opt || {};
+  const s = opt.s || 1, leg = '#33415c', st = `stroke="${c}" stroke-width="3.5" stroke-linecap="round"`;
+  const legs = pose === 'run'
+    ? `<path d="M-2-11L-9 0M2-11L8-2" stroke="${leg}" stroke-width="3.5" stroke-linecap="round"/>`
+    : `<path d="M-3-11V0M3-11V0" stroke="${leg}" stroke-width="3.5" stroke-linecap="round"/>`;
+  let arms = `<path d="M-6-22L-9-12M6-22L9-12" ${st}/>`;
+  if (pose === 'point') arms = `<path d="M-6-22L-10-13M6-22L21-29" ${st}/>`;
+  if (pose === 'phone') arms = `<path d="M-6-22L-10-13M6-22L11-33" ${st}/><rect x="8" y="-43" width="7" height="10" rx="1.5" fill="#2b2d42"/>`;
+  if (pose === 'run') arms = `<path d="M-6-22L-13-16M6-22L12-29" ${st}/>`;
+  if (pose === 'look') arms = `<path d="M-5-22L5-32M6-22L10-31" ${st}/><rect x="4" y="-38" width="10" height="6" rx="2" fill="#2b2d42"/>`;
+  const top = opt.hat
+    ? `<path d="M-8-35A8 8 0 0 1 8-35Z" fill="#ffd166"/><path d="M-10-35H10" stroke="#e0a030" stroke-width="2" stroke-linecap="round"/>`
+    : `<path d="M-7.2-35A7.2 7.2 0 0 1 7.2-35Z" fill="#4b3a2f"/>`;
+  return `<g transform="translate(${x} ${y}) scale(${flip ? -s : s} ${s})">${legs}<rect x="-7" y="-27" width="14" height="17" rx="6" fill="${c}"/>${arms}<circle cx="0" cy="-34" r="7" fill="#f2c9a0"/>${top}</g>`;
+}
+
+const tree = (x, y, s) => `<g transform="translate(${x} ${y}) scale(${s || 1})"><rect x="-4" y="-26" width="8" height="26" rx="3" fill="#8a5a3b"/><circle cx="0" cy="-42" r="20" fill="#4f9d69"/><circle cx="-12" cy="-32" r="12" fill="#5fb07a"/><circle cx="12" cy="-34" r="13" fill="#468f5f"/></g>`;
+const pine = (x, y, s) => `<g transform="translate(${x} ${y}) scale(${s || 1})"><rect x="-3" y="-14" width="6" height="14" fill="#8a5a3b"/><path d="M0-60L16-30H8L20-12H-20L-8-30H-16Z" fill="#3f8a5c"/></g>`;
+const lamp = (x, y) => `<g transform="translate(${x} ${y})"><rect x="-2" y="-46" width="4" height="46" fill="#55606e"/><path d="M0-46Q8-52 14-46" fill="none" stroke="#55606e" stroke-width="3"/><circle cx="14" cy="-43" r="4" fill="#ffe08a"/></g>`;
+const bench = (x, y) => `<g transform="translate(${x} ${y})"><rect x="-16" y="-12" width="32" height="4" rx="2" fill="#a0673f"/><rect x="-16" y="-20" width="32" height="4" rx="2" fill="#a0673f"/><path d="M-12-8V0M12-8V0" stroke="#55606e" stroke-width="3"/></g>`;
+function railing(x1, x2, y) {
+  let posts = '';
+  for (let x = x1; x <= x2; x += 18) posts += `<path d="M${x} ${y}V${y - 16}"/>`;
+  return `<g stroke="#6b7785" stroke-width="2.5" stroke-linecap="round">${posts}<path d="M${x1} ${y - 16}H${x2}"/><path d="M${x1} ${y - 8}H${x2}" opacity=".6"/></g>`;
+}
+const cloud = (x, y, s, c) => `<g transform="translate(${x} ${y}) scale(${s || 1})" fill="${c || '#ffffff'}" opacity=".9"><ellipse cx="0" cy="0" rx="30" ry="12"/><ellipse cx="-14" cy="-6" rx="14" ry="11"/><ellipse cx="10" cy="-10" rx="16" ry="13"/></g>`;
+const gull = (x, y) => `<path d="M${x - 10} ${y}q5-6 10 0q5-6 10 0" fill="none" stroke="#4a5a6a" stroke-width="2.5" stroke-linecap="round"/>`;
+function surface(x1, x2, y, c) {
+  let d = `M${x1} ${y}`;
+  for (let x = x1; x < x2; x += 40) d += 'q10-5 20 0t20 0';
+  return `<path d="${d}" fill="none" stroke="${c || '#dff6f3'}" stroke-width="3" stroke-linecap="round" opacity=".9"/>`;
+}
+const bubbles = (pts) => pts.map((p) => `<circle class="a-bubble" style="animation-delay:${p[3]}s" cx="${p[0]}" cy="${p[1]}" r="${p[2]}" fill="none" stroke="#e8fbff" stroke-width="1.6" opacity=".85"/>`).join('');
+const lightRays = (y, xs, h) => xs.map((x) => `<path d="M${x} ${y}L${x + 44} ${y}L${x + 120} ${y + h}L${x + 40} ${y + h}Z" fill="#ffffff" opacity=".08"/>`).join('');
+const rock = (x, y, rx, ry, c) => `<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" fill="${c || '#8f9aa3'}"/>`;
+function buildings(list, c, ground) {
+  ground = ground || 150;
+  return list.map((b) => `<rect x="${b[0]}" y="${b[1]}" width="${b[2]}" height="${ground - b[1]}" fill="${c}"/>`
+    + `<g fill="#e7eef3" opacity=".7">${[0, 1, 2].map((k) => `<rect x="${b[0] + 6}" y="${b[1] + 8 + k * 16}" width="${b[2] - 12}" height="5" rx="1"/>`).join('')}</g>`).join('');
+}
+function seeded(seed) { return function () { seed = (seed * 16807) % 2147483647; return seed / 2147483647; }; }
+const svgScene = (vb, label, inner) => `<svg viewBox="${vb}" preserveAspectRatio="xMidYMid slice" role="img" aria-label="${esc(label)}" focusable="false">${inner}</svg>`;
+
+/* ---------- 1) 매립 전: 얕고 따뜻한 바닷가 ---------- */
+function sceneBefore(o) {
+  o = o || {};
+  const sky = uid('sky'), sea = uid('sea');
+  const kelps = [[318, 224, 36], [345, 241, 52], [372, 259, 68], [398, 276, 84], [425, 294, 98], [452, 310, 110], [478, 324, 118], [505, 338, 124], [532, 350, 128], [560, 361, 120], [590, 372, 104], [626, 383, 86], [668, 394, 64]];
+  const kc = ['#2f8a5b', '#45a26a', '#2a7b62', '#5bb377'];
+  return svgScene('0 0 800 500', '매립 전 바다: 얕은 바닷가에 해조류 숲과 작은 물고기가 많아요', `
+    <defs>${lg(sky, [[0, '#a7dbea'], [1, '#f6efdc']])}${lg(sea, [[0, '#5cc4c7'], [.5, '#2a93a8'], [1, '#186583']])}</defs>
+    <rect width="800" height="172" fill="url(#${sky})"/>
+    <circle cx="668" cy="62" r="50" fill="#ffe9b8" opacity=".6"/><circle cx="668" cy="62" r="30" fill="#ffd27a"/>
+    ${cloud(150, 56, 1.1)}${cloud(400, 38, .8)}${gull(520, 90)}${gull(548, 104)}
+    <path d="M240 172C300 138 360 132 420 150C480 126 560 128 620 150C680 138 750 142 800 152V172Z" fill="#9fcfbf"/>
+    <rect y="172" width="800" height="328" fill="url(#${sea})"/>
+    ${lightRays(172, [250, 420, 590], 300)}
+    <path d="M0 150C70 146 140 156 210 172C300 196 360 250 440 300C540 360 660 400 800 412V500H0Z" fill="#dcc391"/>
+    <path d="M0 150C70 146 140 156 210 172H0Z" fill="#f0ddb2"/>
+    ${pine(48, 150, .9)}${pine(96, 152, .7)}
+    <path d="M128 154q2-10 4 0M136 155q3-13 6 0M170 160q2-9 4 0" stroke="#7aa35a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    ${kelps.map((p, i) => kelp(p[0], p[1], p[2], kc[i % 4], -(i * .7).toFixed(1))).join('')}
+    ${shell(352, 241)}${shell(446, 305, '#f6dcc4')}${shell(566, 360)}${shell(700, 399, '#f6dcc4')}${shell(760, 406)}
+    ${school(330, 190, 3, '#fbe3a2')}${school(430, 240, 5, '#f39b6d', true)}${school(700, 232, 4, '#fbe3a2')}${school(660, 330, 3, '#f5c45a', true)}${school(520, 300, 3, '#f5c45a')}
+    ${bubbles([[500, 300, 4, 0], [512, 318, 3, -2], [650, 340, 5, -3.5], [745, 360, 3, -1.2]])}
+    ${surface(200, 800, 172)}
+    ${o.shark ? bukangiAt(560, 190, .52, o.shark) : ''}`);
+}
+
+/* ---------- 2) 매립 공사: 소음과 흙탕물 ---------- */
+function sceneConstruction(o) {
+  o = o || {};
+  const sky = uid('sky'), sea = uid('sea'), rnd = seeded(7);
+  let dots = '';
+  for (let i = 0; i < 34; i++) dots += `<circle cx="${r1(380 + rnd() * 410)}" cy="${r1(190 + rnd() * 240)}" r="${r1(1.5 + rnd() * 2)}"/>`;
+  return svgScene('0 0 800 500', '매립 공사: 큰 배와 기계가 바다에 흙과 돌을 쏟아붓고, 물이 뿌옇게 흐려졌어요', `
+    <defs>${lg(sky, [[0, '#c3cdd1'], [1, '#e9e2d5']])}${lg(sea, [[0, '#93ab9a'], [.5, '#6d8475'], [1, '#4c6056']])}</defs>
+    <rect width="800" height="172" fill="url(#${sky})"/>
+    <circle cx="668" cy="62" r="30" fill="#f3d9a0" opacity=".7"/>
+    ${cloud(140, 52, 1.1, '#e6e9ea')}${cloud(430, 40, .9, '#e6e9ea')}
+    <rect y="172" width="800" height="328" fill="url(#${sea})"/>
+    <g fill="#b49b6e" opacity=".35"><ellipse cx="440" cy="250" rx="90" ry="36"/><ellipse cx="570" cy="330" rx="130" ry="50"/><ellipse cx="700" cy="240" rx="100" ry="40"/><ellipse cx="640" cy="420" rx="150" ry="40"/></g>
+    <g fill="#7d6544" opacity=".45">${dots}</g>
+    <path d="M0 148C80 144 170 146 250 150L338 156C352 164 360 176 368 190C392 240 420 300 460 356C500 410 550 438 610 446H800V500H0Z" fill="#a88b62"/>
+    <path d="M0 148C80 144 170 146 250 150L338 156C346 160 352 166 357 172H0Z" fill="#bc9e70"/>
+    <g fill="#8e7a5c">${rock(380, 220, 10, 6, '#8e7a5c')}${rock(410, 270, 13, 7, '#8e7a5c')}${rock(445, 330, 11, 6, '#8e7a5c')}${rock(500, 400, 14, 7, '#8e7a5c')}</g>
+    ${kelp(650, 450, 58, '#7d8f6a', 0)}${kelp(705, 450, 34, '#6f805f', -1)}${kelp(748, 450, 46, '#7d8f6a', -2)}
+    <g transform="translate(290 148)">
+      <circle cx="-34" cy="-9" r="9" fill="#2b2d42"/><circle cx="14" cy="-9" r="9" fill="#2b2d42"/>
+      <rect x="-56" y="-26" width="96" height="12" rx="3" fill="#55606e"/>
+      <path d="M-56-26V-50Q-56-54-52-54H-32V-26Z" fill="#f2b134"/><rect x="-50" y="-49" width="13" height="10" rx="2" fill="#cfe8f5"/>
+      <g transform="rotate(25 40 -28)"><rect x="-28" y="-46" width="68" height="18" rx="2" fill="#e09f2a"/><rect x="-28" y="-50" width="68" height="6" rx="2" fill="#a6702a"/></g>
+      <g fill="#8e6f45"><circle class="a-fall" cx="46" cy="-24" r="4"/><circle class="a-fall" style="animation-delay:-.9s" cx="52" cy="-18" r="3"/><circle class="a-fall" style="animation-delay:-1.7s" cx="44" cy="-14" r="3.5"/></g>
+    </g>
+    <path d="M500 166H680L666 192H514Z" fill="#5d6875"/><rect x="512" y="150" width="40" height="16" rx="2" fill="#7b8794"/><rect x="518" y="154" width="12" height="7" fill="#cfe8f5"/>
+    <path d="M596 166V128" stroke="#3f4954" stroke-width="6"/><path d="M598 132L690 70" stroke="#e0a030" stroke-width="6" stroke-linecap="round"/>
+    <path d="M690 70V150" stroke="#3f4954" stroke-width="2"/><path d="M680 150h20l-4 14h-12z" fill="#55606e"/>
+    <g fill="#6f6152"><circle class="a-fall" cx="686" cy="182" r="5"/><circle class="a-fall" style="animation-delay:-.8s" cx="694" cy="196" r="4"/><circle class="a-fall" style="animation-delay:-1.6s" cx="689" cy="214" r="4.5"/></g>
+    <g fill="none" stroke="#b8462a" stroke-width="3" stroke-linecap="round"><path d="M660 150l-12-8M662 162l-14 2M716 150l12-8M714 162l14 2"/></g>
+    <text class="a-noise" x="584" y="52" font-family="${SVG_TITLE_FONT}" font-size="32" fill="#b8462a" stroke="#fff" stroke-width="5" paint-order="stroke">쿵!</text>
+    <text class="a-noise" style="animation-delay:-.45s" x="452" y="118" font-family="${SVG_TITLE_FONT}" font-size="24" fill="#b8462a" stroke="#fff" stroke-width="4" paint-order="stroke">쿵!</text>
+    ${fish(480, 280, 1, '#e8a27c')}${fish(506, 266, .8, '#e8a27c')}
+    <path d="M452 276h-16M454 284h-20M478 262h-14" stroke="#e8f0ec" stroke-width="2" stroke-linecap="round" opacity=".8"/>
+    ${surface(357, 800, 172, '#e9efe9')}
+    ${o.shark ? bukangiAt(560, 300, .5, o.shark) : ''}`);
+}
+
+/* ---------- 3) 매립 후: 콘크리트 호안과 친수공원 ---------- */
+function sceneAfter(o) {
+  o = o || {};
+  const sky = uid('sky'), sea = uid('sea');
+  const park = CONTENT.place.park;
+  let joints = '';
+  for (let y = 182; y < 446; y += 32) joints += `<path d="M430 ${y}H446"/>`;
+  return svgScene('0 0 800 500', `매립 후 바다: 콘크리트 호안 위에 ${park}이 생기고, 바닷속은 깊고 휑해졌어요`, `
+    <defs>${lg(sky, [[0, '#b5d8e4'], [1, '#efeadf']])}${lg(sea, [[0, '#4aa6b6'], [.55, '#1f7591'], [1, '#135472']])}</defs>
+    <rect width="800" height="172" fill="url(#${sky})"/>
+    <circle cx="668" cy="62" r="46" fill="#ffe9b8" opacity=".5"/><circle cx="668" cy="62" r="28" fill="#ffd98a"/>
+    ${cloud(560, 40, .8)}${gull(600, 110)}
+    ${buildings([[14, 78, 40], [60, 58, 34], [100, 92, 46], [152, 46, 30], [188, 82, 44], [238, 66, 34], [278, 96, 40], [324, 60, 36], [366, 86, 44]], '#b7c6d2')}
+    <rect y="172" width="800" height="328" fill="url(#${sea})"/>
+    ${lightRays(172, [560], 280)}
+    <path d="M0 448H800V500H0Z" fill="#cdb98f"/><path d="M446 448C520 440 640 450 800 444V452H446Z" fill="#cdb98f"/>
+    <rect x="0" y="150" width="430" height="300" fill="#b88f62"/>
+    <g fill="#a37a50" opacity=".7"><rect y="206" width="430" height="6"/><rect y="268" width="430" height="6"/><rect y="336" width="430" height="6"/><rect y="404" width="430" height="6"/></g>
+    <g fill="#9c7b56">${rock(60, 236, 9, 5, '#9c7b56')}${rock(210, 300, 11, 6, '#9c7b56')}${rock(330, 380, 10, 5, '#9c7b56')}${rock(120, 420, 12, 6, '#9c7b56')}</g>
+    <rect x="430" y="150" width="16" height="298" fill="#a9b0b7"/><g stroke="#8d959d" stroke-width="2">${joints}</g><path d="M446 150V448" stroke="#c9ced3" stroke-width="2"/>
+    ${rock(456, 436, 22, 12, '#959da5')}${rock(486, 442, 18, 10, '#8a929a')}${rock(452, 418, 14, 10, '#9aa2aa')}
+    <rect x="0" y="140" width="430" height="12" fill="#8bc77d"/><rect x="240" y="142" width="190" height="9" fill="#d9d2c3"/>
+    ${tree(44, 142, 1)}${tree(128, 142, .85)}${tree(196, 142, .95)}${bench(222, 142)}${lamp(262, 142)}${lamp(410, 142)}
+    ${railing(300, 428, 142)}
+    <g transform="translate(330 82)"><rect x="-3" y="20" width="6" height="40" fill="#55606e"/><rect x="-52" y="-6" width="104" height="30" rx="8" fill="#0f6e70"/><text x="0" y="15" text-anchor="middle" font-family="${SVG_FONT}" font-size="17" fill="#ffffff">${esc(park)}</text></g>
+    ${person(290, 142, '#e07a5f', 'stand')}${person(362, 142, '#3d7ab8', 'phone')}${person(392, 142, '#f2b134', 'stand', true)}${person(98, 142, '#7a5cb8', 'stand')}${person(170, 142, '#2a9d8f', 'stand', true)}
+    ${kelp(700, 450, 26, '#6f9a72', 0)}${rock(600, 448, 18, 7)}${rock(760, 447, 14, 6)}
+    ${fish(640, 330, 1, '#f39b6d')}${fish(668, 318, .8, '#f39b6d')}
+    ${bubbles([[620, 420, 4, -1], [736, 430, 3, -3]])}
+    ${surface(446, 800, 172)}
+    ${o.shark ? bukangiAt(540, 236, .52, o.shark) : ''}`);
+}
+
+/* ---------- 4) 사람들의 반응: “상어가 나타났다!” ---------- */
+function scenePeople(o) {
+  o = o || {};
+  const sky = uid('sky'), sea = uid('sea');
+  let joints = '';
+  for (let y = 182; y < 446; y += 32) joints += `<path d="M300 ${y}H316"/>`;
+  return svgScene('0 0 800 500', '사람들의 반응: 친수공원의 사람들이 놀라 소리치고, 물속의 부캉이도 놀랐어요', `
+    <defs>${lg(sky, [[0, '#b5d8e4'], [1, '#efeadf']])}${lg(sea, [[0, '#4aa6b6'], [.55, '#1f7591'], [1, '#135472']])}</defs>
+    <rect width="800" height="172" fill="url(#${sky})"/>
+    <circle cx="700" cy="56" r="26" fill="#ffd98a"/>
+    ${buildings([[10, 70, 40], [58, 52, 34], [100, 88, 44], [150, 60, 32], [190, 84, 40], [240, 64, 36]], '#b7c6d2')}
+    <rect y="172" width="800" height="328" fill="url(#${sea})"/>
+    ${lightRays(172, [640], 280)}
+    <path d="M0 448H800V500H0Z" fill="#cdb98f"/>
+    <rect x="0" y="150" width="300" height="300" fill="#b88f62"/>
+    <g fill="#a37a50" opacity=".7"><rect y="206" width="300" height="6"/><rect y="268" width="300" height="6"/><rect y="336" width="300" height="6"/><rect y="404" width="300" height="6"/></g>
+    <rect x="300" y="150" width="16" height="298" fill="#a9b0b7"/><g stroke="#8d959d" stroke-width="2">${joints}</g>
+    ${rock(326, 436, 22, 12, '#959da5')}${rock(356, 442, 18, 10, '#8a929a')}
+    <rect x="0" y="140" width="300" height="12" fill="#8bc77d"/><rect x="110" y="142" width="190" height="9" fill="#d9d2c3"/>
+    ${tree(30, 142, .9)}${railing(150, 298, 142)}
+    ${person(84, 142, '#e07a5f', 'run', true)}${person(126, 142, '#d16b86', 'run', true)}${person(162, 142, '#3d7ab8', 'phone')}${person(198, 142, '#f2b134', 'point')}${person(232, 142, '#7a5cb8', 'point')}${person(266, 142, '#2a9d8f', 'phone')}
+    <g font-family="${SVG_TITLE_FONT}" font-size="22" fill="#b8462a"><text x="194" y="94">!</text><text x="228" y="92">!</text><text x="120" y="96">!</text></g>
+    <g transform="translate(0 0)"><path d="M108 22H338Q350 22 350 34V58Q350 70 338 70H232L214 88L212 70H108Q96 70 96 58V34Q96 22 108 22Z" fill="#ffffff" stroke="#12253f" stroke-width="2.5"/>
+    <text x="223" y="54" text-anchor="middle" font-family="${SVG_TITLE_FONT}" font-size="24" fill="#12253f">${esc(CONTENT.story.shout)}</text></g>
+    <g fill="none" stroke="#ffffff" stroke-width="2.5"><ellipse class="a-ripple" cx="560" cy="172" rx="34" ry="6"/><ellipse class="a-ripple" style="animation-delay:-1.2s" cx="560" cy="172" rx="34" ry="6"/></g>
+    ${o.shark ? bukangiAt(470, 147, .7, o.shark, { still: true }) : ''}
+    <text x="606" y="140" font-family="${SVG_TITLE_FONT}" font-size="28" fill="#b8462a" stroke="#fff" stroke-width="4" paint-order="stroke">!?</text>
+    ${fish(700, 330, 1, '#f39b6d', true)}${rock(560, 448, 16, 6)}
+    ${surface(316, 800, 172)}`);
+}
+
+const SCENES = { before: sceneBefore, construction: sceneConstruction, after: sceneAfter, people: scenePeople };
+
+/* ---------- 시뮬레이션 장면 (항목마다 data-k 로 보이기/숨기기) ---------- */
+const SIM_SLOTS = {
+  people: [[52, '#e07a5f'], [74, '#3d7ab8'], [96, '#f2b134'], [118, '#7a5cb8'], [180, '#2a9d8f'], [202, '#d16b86'], [224, '#5c8d3e'], [246, '#c4502f']],
+  seaweed: [[284, 72], [318, 98], [352, 62], [386, 106], [420, 84], [454, 112], [488, 70], [522, 96], [556, 104], [590, 76], [624, 110], [658, 86], [700, 66], [742, 98]],
+  shells: [298, 346, 404, 470, 540, 604, 682, 756],
+  schools: [[330, 176, 3, '#f39b6d', false], [430, 250, 4, '#f5c45a', true], [640, 166, 4, '#fbe3a2', false], [720, 196, 3, '#f39b6d', true], [380, 330, 4, '#fbe3a2', false], [500, 356, 3, '#f39b6d', true], [610, 262, 4, '#f5c45a', false], [744, 320, 3, '#fbe3a2', true]],
+  mids: [['ray', 400, 300, false], ['big', 700, 362, true], ['ray', 470, 196, false], ['big', 736, 252, true], ['ray', 590, 392, true], ['big', 330, 262, false], ['ray', 690, 306, false]],
+  shark: [508, 178, .5]
+};
+
+function simSharkInner(mood) {
+  const p = SIM_SLOTS.shark;
+  return bukangiAt(p[0], p[1], p[2], mood);
+}
+
+function simSceneSVG() {
+  const sky = uid('sky'), sea = uid('sea'), sl = SIM_SLOTS;
+  const si = (k, i, inner) => `<g class="si" data-k="${k}" data-i="${i}">${inner}</g>`;
+  const kc = ['#2f8a5b', '#45a26a', '#2a7b62', '#5bb377'];
+  let joints = '';
+  for (let y = 130; y < 418; y += 32) joints += `<path d="M250 ${y}H262"/>`;
+  const pill = (x, y, t) => `<g transform="translate(${x} ${y})"><rect x="-58" y="-17" width="116" height="32" rx="16" fill="#0b2545" opacity=".88"/><text x="0" y="6" text-anchor="middle" font-family="${SVG_FONT}" font-size="18" fill="#ffffff">${t}</text></g>`;
+  return `<svg viewBox="0 0 800 460" role="img" aria-label="시뮬레이션 바닷속 모습" id="sim-svg" focusable="false">
+    <defs>${lg(sky, [[0, '#b5dcea'], [1, '#f3eee0']])}${lg(sea, [[0, '#49b2c0'], [.55, '#237f99'], [1, '#155a78']])}</defs>
+    <rect width="800" height="120" fill="url(#${sky})"/>
+    <circle cx="700" cy="46" r="24" fill="#ffd98a"/>${cloud(470, 36, .7)}
+    ${buildings([[8, 40, 30], [44, 26, 28], [80, 52, 34], [124, 34, 26], [158, 48, 32], [196, 30, 28]], '#bccad5', 94)}
+    <rect y="120" width="800" height="340" fill="url(#${sea})"/>
+    <rect id="sim-murk" x="262" y="120" width="538" height="340" fill="#6f7a56" opacity="0" style="transition:opacity 1s ease"/>
+    ${lightRays(120, [330, 560], 300)}
+    <path d="M262 420C380 410 520 428 640 418C720 412 760 420 800 416V460H262Z" fill="#d6c08e"/>
+    <rect x="0" y="100" width="250" height="360" fill="#b88f62"/>
+    <g fill="#a37a50" opacity=".7"><rect y="160" width="250" height="6"/><rect y="236" width="250" height="6"/><rect y="320" width="250" height="6"/><rect y="400" width="250" height="6"/></g>
+    <rect x="250" y="100" width="12" height="320" fill="#a9b0b7"/><g stroke="#8d959d" stroke-width="2">${joints}</g>
+    ${rock(272, 412, 16, 9, '#959da5')}${rock(292, 418, 12, 7, '#8a929a')}
+    <rect x="0" y="92" width="262" height="10" fill="#8bc77d"/><rect x="140" y="94" width="122" height="7" fill="#d9d2c3"/>
+    ${tree(24, 94, .78)}${lamp(140, 94)}${railing(160, 258, 94)}
+    ${si('signs', 0, `<g transform="translate(176 0)"><rect x="-2" y="58" width="5" height="36" fill="#55606e"/><rect x="-26" y="30" width="54" height="32" rx="5" fill="#0f6e70" stroke="#fff" stroke-width="2"/><path d="M-12 54q4-14 12-17q-2 9 2 17z" fill="#cfe3f3"/><text x="16" y="55" text-anchor="middle" font-family="${SVG_TITLE_FONT}" font-size="22" fill="#ffd166">!</text></g>`)}
+    ${si('edu', 0, `<g><path d="M44 14V60M236 14V60" stroke="#55606e" stroke-width="3"/><rect x="44" y="12" width="192" height="30" rx="6" fill="#ffd166" stroke="#c98a1a" stroke-width="2"/><text x="140" y="33" text-anchor="middle" font-family="${SVG_FONT}" font-size="18" fill="#12253f">생태 관찰 교실</text></g>`)}
+    ${sl.people.map((p, i) => si('people', i, person(p[0], 94, p[1], i % 3 === 1 ? 'look' : 'stand', i % 2 === 1, { s: .9, hat: false }))).join('')}
+    ${si('zones', 0, `<g><path d="M500 122V416" stroke="#fff3dc" stroke-width="3" stroke-dasharray="8 9" opacity=".7"/><g stroke="#ffffff" stroke-width="2"><circle cx="480" cy="121" r="6" fill="#e0663a"/><circle cx="500" cy="121" r="6" fill="#ffffff"/><circle cx="520" cy="121" r="6" fill="#e0663a"/></g>${pill(380, 96, '수영 구역')}${pill(735, 96, '관찰 구역')}</g>`)}
+    ${sl.seaweed.map((p, i) => si('seaweed', i, kelp(p[0], 426, p[1], kc[i % 4], -(i * .6).toFixed(1)))).join('')}
+    ${sl.shells.map((x, i) => si('shells', i, shell(x, 421, i % 2 ? '#f6dcc4' : '#f2c9a8'))).join('')}
+    ${si('restore', 0, `<g><path d="M300 388V424M372 392V424" stroke="#8a5a3b" stroke-width="3"/><path d="M300 388l22 7-22 7zM372 392l22 7-22 7z" fill="#ffd166"/><g transform="translate(336 372)"><rect x="-44" y="-15" width="88" height="28" rx="14" fill="#0b2545" opacity=".85"/><text x="0" y="5" text-anchor="middle" font-family="${SVG_FONT}" font-size="16" fill="#ffffff">복원 구역</text></g></g>`)}
+    ${sl.schools.map((p, i) => si('small', i, school(p[0], p[1], p[2], p[3], p[4]))).join('')}
+    ${sl.mids.map((m, i) => si('mid', i, m[0] === 'ray' ? ray(m[1], m[2], 1, m[3]) : bigFish(m[1], m[2], 1, m[3]))).join('')}
+    <g class="si" data-k="shark" data-i="0" id="sim-shark">${simSharkInner('anxious')}</g>
+    ${si('boat', 0, `<g class="a-bob"><path d="M572 112H668L656 132H584Z" fill="#c4502f"/><rect x="598" y="96" width="26" height="16" rx="2" fill="#fff3dc"/><rect x="603" y="100" width="8" height="6" fill="#9fd3e0"/>${person(648, 112, '#3d7ab8', 'stand', false, { s: .8 })}<path d="M586 112V78L560 98" fill="none" stroke="#55606e" stroke-width="3" stroke-linecap="round"/></g>`)}
+    ${si('boat-net', 0, `<g><path d="M560 98C536 140 532 210 560 250C588 268 618 246 612 200C606 160 596 128 586 112" fill="rgba(240,236,224,.18)" stroke="#f0ece0" stroke-width="2.5"/><path d="M548 150H606M542 190H612M548 230H606M566 104V254M590 118V256" stroke="#f0ece0" stroke-width="1.5" opacity=".75"/></g>`)}
+    ${si('boat-empty', 0, `<g><path d="M560 98C548 112 548 128 560 136C572 140 580 128 574 112" fill="rgba(240,236,224,.25)" stroke="#f0ece0" stroke-width="2"/>${fish(562, 124, .55, '#f39b6d')}</g>`)}
+    ${si('boat-full', 0, `<g><path d="M560 98C540 118 540 146 560 156C584 162 594 140 586 112" fill="rgba(240,236,224,.25)" stroke="#f0ece0" stroke-width="2"/>${fish(556, 120, .55, '#f39b6d')}${fish(570, 132, .55, '#f5c45a', true)}${fish(558, 144, .55, '#fbe3a2')}${fish(574, 118, .5, '#f39b6d', true)}${fish(566, 150, .5, '#f5c45a')}</g>`)}
+    ${surface(262, 800, 120)}
+  </svg>`;
+}
+
+/* ---------- 아이콘 ---------- */
+const ICONS = {
+  shark: () => `<svg viewBox="0 0 240 160" aria-hidden="true" focusable="false">${bukangiParts('calm')}</svg>`,
+  mid: () => `<svg viewBox="-50 -34 100 68" aria-hidden="true" focusable="false">${ray(4, 0, 1, false)}</svg>`,
+  small: () => `<svg viewBox="0 0 64 44" aria-hidden="true" focusable="false">${fish(24, 13, 1, '#f39b6d')}${fish(46, 22, .85, '#e0a030', true)}${shell(18, 40)}${shell(46, 41, '#f6dcc4')}</svg>`,
+  seaweed: () => `<svg viewBox="0 0 64 44" aria-hidden="true" focusable="false">${kelp(16, 46, 38, '#2f8a5b', 0)}${kelp(32, 46, 30, '#45a26a', -1)}${kelp(48, 46, 36, '#2a7b62', -2)}</svg>`,
+  capture: () => `<svg viewBox="0 0 96 80" aria-hidden="true" focusable="false"><rect width="96" height="80" rx="18" fill="#e3f1f4"/><path d="M0 46H96V62Q96 80 78 80H18Q0 80 0 62Z" fill="#7cc3d3"/>${surface(0, 96, 46, '#ffffff')}<path d="M10 40H60L54 52H16Z" fill="#c4502f"/><rect x="20" y="30" width="16" height="10" rx="2" fill="#fff3dc"/><path d="M48 40V14M48 16L74 30" stroke="#55606e" stroke-width="3" stroke-linecap="round"/><path d="M74 30C64 42 64 58 76 66C88 60 88 44 74 30Z" fill="rgba(255,255,255,.4)" stroke="#55606e" stroke-width="2"/><path d="M67 44H83M67 54H85M71 61H83M75 32V66" stroke="#55606e" stroke-width="1.5"/></svg>`,
+  coexist: () => `<svg viewBox="0 0 96 80" aria-hidden="true" focusable="false"><rect width="96" height="80" rx="18" fill="#e3f1f4"/><path d="M0 46H96V62Q96 80 78 80H18Q0 80 0 62Z" fill="#7cc3d3"/>${surface(0, 96, 46, '#ffffff')}<path d="M60 52Q64 34 76 30Q74 42 78 52Z" fill="#6f9ec6" stroke="#2c5476" stroke-width="2" stroke-linejoin="round"/><g stroke="#ffffff" stroke-width="2"><circle cx="14" cy="46" r="5" fill="#e0663a"/><circle cx="29" cy="46" r="5" fill="#ffffff"/><circle cx="44" cy="46" r="5" fill="#e0663a"/></g><path d="M30 32V44" stroke="#55606e" stroke-width="3"/><rect x="12" y="10" width="36" height="22" rx="4" fill="#0f6e70"/><text x="30" y="28" text-anchor="middle" font-family="${SVG_TITLE_FONT}" font-size="17" fill="#ffd166">!</text><path d="M74 14c-3-5-10-2-8 3l8 7 8-7c2-5-5-8-8-3z" fill="#f08a6c"/></svg>`,
+  arrow: (dir) => `<svg viewBox="0 0 22 28" aria-hidden="true" focusable="false"><path d="${dir === 'up' ? 'M11 26V4M3 11l8-8 8 8' : 'M11 2v22M3 17l8 8 8-8'}" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  grip: () => `<svg viewBox="0 0 34 20" aria-hidden="true" focusable="false"><path d="M12 3L4 10l8 7M22 3l8 7-8 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+};
+
+/* =====================================================================
+   ⚙️ 앱 동작 (여기부터는 고치지 않아도 돼요)
+   ===================================================================== */
+const H2C_URL = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+const STORE_KEY = 'bukangi-sea.v1.state';
+const RECORDS_KEY = 'bukangi-sea.v1.records';
+
+const $ = (s, el) => (el || document).querySelector(s);
+const $$ = (s, el) => Array.prototype.slice.call((el || document).querySelectorAll(s));
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const stripTags = (s) => String(s == null ? '' : s).replace(/<[^>]*>/g, '');
+const prefersReduced = () => !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+const smooth = () => (prefersReduced() ? 'auto' : 'smooth');
+function debounce(fn, ms) { let t = 0; return function () { clearTimeout(t); t = setTimeout(fn, ms); }; }
+
+/** 받침에 맞는 조사 붙이기: josa('공존', '을/를') → '공존을' */
+function josa(word, pair) {
+  word = String(word);
+  if (pair.indexOf('/') < 0) return word + pair;
+  const p = pair.split('/');
+  const code = word.charCodeAt(word.length - 1);
+  if (!(code >= 0xAC00 && code <= 0xD7A3)) return word + p[0];
+  const jong = (code - 0xAC00) % 28;
+  if (p[0] === '으로') return word + (jong && jong !== 8 ? '으로' : '로');
+  return word + (jong ? p[0] : p[1]);
+}
+/** {park} {village:은/는} 같은 표시를 실제 이름으로 바꾸기 */
+function fill(text, extra) {
+  const dict = Object.assign({}, CONTENT.place, extra || {});
+  return String(text == null ? '' : text).replace(/\{(\w+)(?::([^}]+))?\}/g, (m, key, pair) => {
+    if (!Object.prototype.hasOwnProperty.call(dict, key)) return m;
+    return pair ? josa(dict[key], pair) : dict[key];
+  });
+}
+
+/* ---------- 저장 (localStorage를 못 쓰면 메모리에만 보관) ---------- */
+let storageOK = true;
+const memStore = {};
+const storage = {
+  get(key, fallback) {
+    let raw = null;
+    try { raw = window.localStorage.getItem(key); } catch (e) { storageOK = false; }
+    if (raw != null) { try { return JSON.parse(raw); } catch (e) { /* 깨진 값은 무시 */ } }
+    return Object.prototype.hasOwnProperty.call(memStore, key) ? memStore[key] : fallback;
+  },
+  set(key, val) {
+    memStore[key] = val;
+    try { window.localStorage.setItem(key, JSON.stringify(val)); return true; } catch (e) { storageOK = false; return false; }
+  },
+  remove(key) {
+    delete memStore[key];
+    try { window.localStorage.removeItem(key); } catch (e) { storageOK = false; }
+  }
+};
+(function testStorage() {
+  try { const k = '__bukangi_test__'; window.localStorage.setItem(k, '1'); window.localStorage.removeItem(k); } catch (e) { storageOK = false; }
+})();
+
+/* ---------- 학생 진행 상태 ---------- */
+const SIM_KEYS = ['capture', 'coexist'];
+const SLIDES = CONTENT.story.cards.map((c) => Object.assign({ type: 'card' }, c)).concat([Object.assign({ type: 'compare' }, CONTENT.story.compare)]);
+const COMPARE_INDEX = SLIDES.length - 1;
+
+function newState() {
+  return {
+    v: 1,
+    id: 'S' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+    screen: 0, maxScreen: 0, started: false,
+    name: '',
+    storyIndex: 0, storySeen: [], storyDone: false,
+    sliderPos: 50, sliderMoved: false,
+    emoBefore: '', emoAfter: '', q1: '',
+    simFirst: '', simCurrent: '', simViewed: { capture: false, coexist: false },
+    finalChoice: '', tags: [], tagEtc: '', reason: '',
+    q2: '', pledge: '', pledgeCustom: '',
+    startedAt: '', finishedAt: '', updatedAt: ''
+  };
+}
+function loadState() {
+  const base = newState();
+  const saved = storage.get(STORE_KEY, null);
+  if (!saved || typeof saved !== 'object' || saved.v !== 1) return base;
+  const s = Object.assign(base, saved);
+  ['id', 'name', 'emoBefore', 'emoAfter', 'q1', 'simFirst', 'simCurrent', 'finalChoice', 'tagEtc', 'reason', 'q2', 'pledge', 'pledgeCustom', 'startedAt', 'finishedAt', 'updatedAt']
+    .forEach((k) => { if (typeof s[k] !== 'string') s[k] = base[k]; });
+  if (!Array.isArray(s.tags)) s.tags = [];
+  if (!Array.isArray(s.storySeen)) s.storySeen = [];
+  if (!s.simViewed || typeof s.simViewed !== 'object') s.simViewed = { capture: false, coexist: false };
+  if (!CONTENT.sim.scenarios[s.simCurrent]) s.simCurrent = '';
+  if (!CONTENT.sim.scenarios[s.simFirst]) s.simFirst = '';
+  if (!CONTENT.sim.scenarios[s.finalChoice]) s.finalChoice = '';
+  s.started = !!s.started;
+  s.screen = clamp(parseInt(s.screen, 10) || 0, 0, 5);
+  s.maxScreen = clamp(parseInt(s.maxScreen, 10) || 0, s.screen, 5);
+  s.storyIndex = clamp(parseInt(s.storyIndex, 10) || 0, 0, SLIDES.length - 1);
+  s.sliderPos = isFinite(Number(s.sliderPos)) ? clamp(Number(s.sliderPos), 0, 100) : 50;
+  return s;
+}
+let state = loadState();
+
+/* ---------- 이 기기의 응답 기록 (교사용 CSV) ---------- */
+function getRecords() {
+  const r = storage.get(RECORDS_KEY, []);
+  return Array.isArray(r) ? r.filter((x) => x && typeof x === 'object' && x.id) : [];
+}
+function pledgeText(s) { return s.pledge === '__custom__' ? String(s.pledgeCustom || '').trim() : (s.pledge || ''); }
+function buildRecord(s) {
+  return {
+    id: s.id, name: String(s.name || '').trim(), startedAt: s.startedAt, updatedAt: s.updatedAt, finishedAt: s.finishedAt, maxScreen: s.maxScreen,
+    emoBefore: s.emoBefore, emoAfter: s.emoAfter, q1: s.q1, simFirst: s.simFirst,
+    simViewed: SIM_KEYS.filter((k) => s.simViewed[k]),
+    finalChoice: s.finalChoice, tags: s.tags.slice(), tagEtc: s.tagEtc, reason: s.reason, q2: s.q2, pledge: pledgeText(s)
+  };
+}
+function upsertRecord() {
+  const recs = getRecords();
+  const rec = buildRecord(state);
+  const i = recs.findIndex((r) => r.id === rec.id);
+  if (i >= 0) recs[i] = rec; else recs.push(rec);
+  storage.set(RECORDS_KEY, recs);
+}
+let saveTimer = 0;
+function saveNow() {
+  clearTimeout(saveTimer);
+  state.updatedAt = new Date().toISOString();
+  storage.set(STORE_KEY, state);
+  if (state.started) upsertRecord();
+}
+function saveSoon() { clearTimeout(saveTimer); saveTimer = setTimeout(saveNow, 350); }
+
+/* ---------- 알림 ---------- */
+let toastTimer = 0;
+function toast(msg) {
+  const t = $('#toast');
+  t.textContent = msg;
+  t.classList.add('is-show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('is-show'), 3600);
+}
+function flash(el) {
+  if (!el) return;
+  el.classList.remove('need-flash');
+  void el.offsetWidth;
+  el.classList.add('need-flash');
+}
+
+/* ---------- 시간 표시 ---------- */
+function toSec(t) { const m = /(\d+)\s*분/.exec(t || ''), s = /(\d+)\s*초/.exec(t || ''); return (m ? +m[1] * 60 : 0) + (s ? +s[1] : 0); }
+function fmtSec(sec) { const m = Math.floor(sec / 60), s = sec % 60; return ((m ? m + '분' : '') + (m && s ? ' ' : '') + (s ? s + '초' : '')) || '0분'; }
+function totalTimeText() { let t = 0; for (let i = 0; i <= 5; i++) t += toSec(STAGE_TIMES[i]); return fmtSec(t); }
+const pad2 = (n) => String(n).padStart(2, '0');
+function fmtDate(iso, withTime) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return '';
+  return `${d.getFullYear()}. ${d.getMonth() + 1}. ${d.getDate()}.` + (withTime ? ` ${pad2(d.getHours())}:${pad2(d.getMinutes())}` : '');
+}
+function stamp() { const d = new Date(); return `${d.getFullYear()}${pad2(d.getMonth() + 1)}${pad2(d.getDate())}_${pad2(d.getHours())}${pad2(d.getMinutes())}`; }
+
+/* ---------- 이름표 도우미 ---------- */
+const emoById = (id) => CONTENT.q1.emotions.filter((e) => e.id === id)[0];
+const emoText = (id) => { const e = emoById(id); return e ? `${e.emoji} ${e.label}` : '-'; };
+function tagLabel(id) { const t = CONTENT.choice.tags.filter((x) => x.id === id)[0]; return t ? t.label : id; }
+function tagList(s) { return (s.tags || []).map((id) => (id === 'etc' && String(s.tagEtc || '').trim() ? `기타: ${String(s.tagEtc).trim()}` : tagLabel(id))); }
+function choiceName(k) { const c = CONTENT.sim.scenarios[k]; return c ? `${c.letter} ${c.title}` : ''; }
+function viewedText(r) { return (r.simViewed || []).map(choiceName).join(', ') || '-'; }
+function statusText(r) { return r.finishedAt ? '완료' : `진행 중 (${Math.max(1, r.maxScreen || 0)}단계)`; }
+const reasonLength = (t) => String(t || '').replace(/_{3,}/g, '').trim().length;
+
+/* =====================================================================
+   화면 이동과 진행 표시줄
+   ===================================================================== */
+function renderSteps() {
+  $('#steps').innerHTML = [1, 2, 3, 4, 5].map((i) => `<li><button type="button" class="step-btn" data-step="${i}">`
+    + `<span class="step-num" aria-hidden="true">${i}</span>`
+    + `<span class="step-label" aria-hidden="true"><span class="step-name">${esc(CONTENT.stages[i].short)}</span><span class="step-time">⏱ ${esc(STAGE_TIMES[i])}</span></span>`
+    + `<span class="sr-only step-sr"></span></button></li>`).join('');
+}
+function updateProgress() {
+  const n = state.screen;
+  $$('.step-btn').forEach((b) => {
+    const i = Number(b.dataset.step);
+    const done = state.maxScreen > i || (i === 5 && !!state.finishedAt);
+    const locked = i > state.maxScreen;
+    b.classList.toggle('is-done', done && i !== n);
+    b.classList.toggle('is-current', i === n);
+    b.setAttribute('aria-disabled', locked ? 'true' : 'false');
+    if (i === n) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
+    $('.step-num', b).textContent = done && i !== n ? '✓' : String(i);
+    $('.step-sr', b).textContent = `${i}단계 ${CONTENT.stages[i].title}, 권장 ${STAGE_TIMES[i]}${i === n ? ', 지금 단계' : done ? ', 완료' : locked ? ', 아직 열리지 않음' : ''}`;
+  });
+  $('#progress-now').innerHTML = n === 0
+    ? `총 5단계 · ⏱ 약 ${esc(totalTimeText())}`
+    : `<b>${n}단계 · ${esc(CONTENT.stages[n].title)}</b> · ⏱ 권장 ${esc(STAGE_TIMES[n])}`;
+  const doneCount = state.finishedAt ? 5 : Math.max(0, state.maxScreen - 1);
+  $('#progress-fill').style.width = (doneCount / 5 * 100) + '%';
+}
+
+function goTo(n, opt) {
+  opt = opt || {};
+  n = clamp(n, 0, 5);
+  const prev = state.screen;
+  if (prev === 2 && n !== 2) simPause();
+  state.screen = n;
+  if (n > state.maxScreen) state.maxScreen = n;
+  $$('.screen').forEach((sc) => {
+    const on = Number(sc.dataset.screen) === n;
+    sc.hidden = !on;
+    sc.classList.remove('is-entering', 'from-back');
+    if (on && opt.animate !== false && !prefersReduced()) {
+      void sc.offsetWidth;
+      sc.classList.add('is-entering');
+      if (n < prev) sc.classList.add('from-back');
+    }
+  });
+  $$('.nav-hint').forEach((h) => { h.textContent = ''; });
+  $('#toast').classList.remove('is-show');
+  onEnter(n);
+  updateProgress();
+  if (opt.scroll !== false) window.scrollTo(0, 0);
+  if (opt.focus !== false) {
+    const h = $('#screen-' + n + ' [tabindex="-1"]');
+    if (h) { try { h.focus({ preventScroll: true }); } catch (e) { h.focus(); } }
+  }
+  saveSoon();
+}
+
+function onEnter(n) {
+  if (n === 0) renderStart();
+  if (n === 1) { goSlide(state.storyIndex, { instant: true, silent: true }); requestAnimationFrame(syncStoryHeight); }
+  if (n === 2) renderSimOnEnter();
+  if (n === 3) { updateFrameLabels(); updateCounter(); }
+  if (n === 4) renderClosing();
+  if (n === 5) {
+    if (!state.finishedAt) state.finishedAt = new Date().toISOString();
+    renderCard();
+    saveNow();
+  }
+}
+
+/** 다음 단계로 가기 전에 빠진 것을 확인 */
+function validateStage(n) {
+  const R = CONTENT.rules;
+  const len = (t) => String(t || '').trim().length;
+  if (n === 1) {
+    if (!state.storyDone) return { msg: '이야기 카드를 끝까지 넘겨 보세요.', focus: '#story-next' };
+    if (!state.emoBefore) return { msg: '매립 전 부캉이의 마음을 골라 주세요.', focus: 'input[name="emo-before"]' };
+    if (!state.emoAfter) return { msg: '매립 후 부캉이의 마음을 골라 주세요.', focus: 'input[name="emo-after"]' };
+    if (len(state.q1) < R.q1Min) return { msg: `부캉이에게 바다는 어떤 곳이었는지 한 줄(${R.q1Min}자 이상)로 써 주세요.`, focus: '#q1-text' };
+  }
+  if (n === 2) {
+    if (!state.simViewed.capture && !state.simViewed.coexist) {
+      if (sim.key) return { msg: '5년차까지 변화를 살펴본 뒤 다음 단계로 갈 수 있어요.', focus: '#sim-next' };
+      return { msg: '선택 카드를 하나 골라 5년 동안의 변화를 살펴보세요.', focus: '.choice-btn' };
+    }
+  }
+  if (n === 3) {
+    if (!state.finalChoice) return { msg: '나의 최종 선택을 골라 주세요.', focus: 'input[name="final-choice"]' };
+    if (!state.tags.length) return { msg: '내가 고려한 것을 하나 이상 골라 주세요.', focus: 'input[name="tags"]' };
+    if (state.tags.indexOf('etc') >= 0 && !state.tagEtc.trim()) return { msg: '‘기타’에 내가 고려한 것을 적어 주세요.', focus: '#tag-etc' };
+    if (/_{3,}/.test(state.reason)) return { msg: '이유에 남아 있는 빈칸(___)을 내 생각으로 바꿔 주세요.', focus: '#reason' };
+    if (reasonLength(state.reason) < R.reasonMin) return { msg: `이유를 ${R.reasonMin}자 이상 써 주세요. (지금 ${reasonLength(state.reason)}자)`, focus: '#reason' };
+  }
+  if (n === 4) {
+    if (len(state.q2) < R.q2Min) return { msg: `발문 2에 대한 생각을 한 문장(${R.q2Min}자 이상)으로 써 주세요.`, focus: '#q2-text' };
+    if (!state.pledge) return { msg: '공존을 위해 내가 할 수 있는 일을 하나 골라 주세요.', focus: 'input[name="pledge"]' };
+    if (state.pledge === '__custom__' && len(state.pledgeCustom) < 2) return { msg: '나의 다짐을 직접 써 주세요.', focus: '#pledge-custom' };
+  }
+  return null;
+}
+function tryNext(n) {
+  const err = validateStage(n);
+  const hint = $('#screen-' + n + ' .nav-hint');
+  if (!err) { if (hint) hint.textContent = ''; goTo(n + 1); return; }
+  if (hint) hint.textContent = '⚠️ ' + err.msg;
+  toast(err.msg);
+  const f = err.focus ? $('#screen-' + n + ' ' + err.focus) : null;
+  if (f) {
+    const box = f.closest('.field, fieldset, .carousel-controls, .sim-top, .choices') || f;
+    flash(box);
+    try { f.focus({ preventScroll: true }); } catch (e) { f.focus(); }
+    box.scrollIntoView({ behavior: smooth(), block: 'center' });
+  }
+}
+
+/* =====================================================================
+   0단계: 시작 화면
+   ===================================================================== */
+function renderStaticTexts() {
+  for (let i = 1; i <= 5; i++) {
+    const st = CONTENT.stages[i];
+    $$(`[data-eyebrow="${i}"]`).forEach((el) => { el.textContent = `${i}단계 · ⏱ 권장 ${STAGE_TIMES[i]}`; });
+    $$(`[data-title="${i}"]`).forEach((el) => { el.textContent = st.title; });
+    $$(`[data-lead="${i}"]`).forEach((el) => { el.innerHTML = fill(st.lead || ''); });
+  }
+  $('#brand-logo').innerHTML = bukangiSVG('calm', '', '');
+  document.title = CONTENT.start.title;
+}
+function buildStart() {
+  $('#start-bk').innerHTML = bukangiSVG('calm', '', '웃고 있는 상어 부캉이');
+  $('#s0-title').textContent = CONTENT.start.title;
+  $('#start-sub').innerHTML = fill(CONTENT.start.subtitle);
+  $('#student-name').placeholder = CONTENT.start.namePlaceholder;
+  $('#start-meta').innerHTML = `⏱ 모두 약 <b>${esc(totalTimeText())}</b> · ${fill(CONTENT.start.meta)}`;
+  $('#start-steps').innerHTML = [1, 2, 3, 4, 5].map((i) => `<li><span class="s-name">${esc(CONTENT.stages[i].title)}</span><span class="s-time">${esc(STAGE_TIMES[i])}</span></li>`).join('');
+}
+function renderStart() {
+  $('#student-name').value = state.name;
+  const cont = state.started && state.maxScreen >= 1;
+  $('#start-btn').innerHTML = cont ? `이어서 하기 (${state.maxScreen}단계) <span aria-hidden="true">▶</span>` : '시작하기';
+  $('#new-start-btn').hidden = !cont;
+}
+function startActivity() {
+  state.name = $('#student-name').value.trim();
+  if (!state.started) { state.started = true; state.startedAt = new Date().toISOString(); }
+  goTo(Math.max(1, state.maxScreen));
+}
+
+/* =====================================================================
+   1단계: 이야기 카드와 비교 슬라이더
+   ===================================================================== */
+function cardSlideHTML(c, i) {
+  const draw = SCENES[c.scene];
+  return `<article class="slide" data-index="${i}" aria-roledescription="slide" aria-label="${i + 1} / ${SLIDES.length}">
+    <div class="slide-scene">${draw ? draw({ shark: c.mood }) : ''}</div>
+    <div class="slide-body">
+      <span class="slide-tag">${esc(c.tag)}</span>
+      <h3 class="slide-title">${fill(c.title)}</h3>
+      <div class="speech">
+        <div class="speech-who">${bukangiSVG(c.mood, 'bk-mini', '')}<span>부캉이의 이야기 <span class="mood-chip">마음: ${esc(MOOD_LABEL[c.mood] || '')}</span></span></div>
+        ${c.lines.map((l) => `<p>${fill(l)}</p>`).join('')}
+      </div>
+    </div>
+  </article>`;
+}
+function compareSlideHTML(c, i) {
+  const inds = c.indicators.map((d, k) => `<li class="ind"><span class="ind-label"><span aria-hidden="true">${d.icon}</span> ${esc(d.label)}</span><span class="ind-word" id="ind-word-${k}"></span><span class="ind-bar" aria-hidden="true"><i id="ind-bar-${k}"></i></span></li>`).join('');
+  return `<article class="slide slide--compare" data-index="${i}" aria-roledescription="slide" aria-label="${i + 1} / ${SLIDES.length}">
+    <div class="compare-layout">
+      <div class="compare" id="compare">
+        <div class="compare-after">${sceneAfter({})}</div>
+        <div class="compare-before">${sceneBefore({})}</div>
+        <span class="compare-tag compare-tag--before">${esc(c.beforeLabel)}</span>
+        <span class="compare-tag compare-tag--after">${esc(c.afterLabel)}</span>
+        <div class="compare-line" aria-hidden="true"></div>
+        <div class="compare-handle" id="compare-handle" role="slider" tabindex="-1" aria-label="매립 전후 비교 손잡이" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">${ICONS.grip()}</div>
+        <div class="compare-hint" id="compare-hint" aria-hidden="true">${esc(c.hint)}</div>
+      </div>
+      <div class="compare-side">
+        <span class="slide-tag">${esc(c.tag)}</span>
+        <h3 class="slide-title">${fill(c.title)}</h3>
+        <p class="compare-guide">${fill(c.guide)}</p>
+        <div class="compare-who"><span id="compare-avatar"></span><p>${fill(c.say)}</p></div>
+        <ul class="indicators" aria-label="바다 지표 (상대 비교)">${inds}</ul>
+        <p class="ind-scale" id="compare-ratio" aria-hidden="true"></p>
+      </div>
+    </div>
+  </article>`;
+}
+function buildStory() {
+  $('#story-track').innerHTML = SLIDES.map((s, i) => (s.type === 'compare' ? compareSlideHTML(s, i) : cardSlideHTML(s, i))).join('');
+  $('#story-dots').innerHTML = SLIDES.map((s, i) => `<button type="button" class="dot" data-dot="${i}" aria-label="${i + 1}번째 카드: ${esc(stripTags(fill(s.title)))}"></button>`).join('');
+  initCompare();
+  initSwipe();
+}
+
+function syncStoryHeight() {
+  const vp = $('#story-viewport');
+  const s = $$('.slide', vp)[state.storyIndex];
+  if (!s || $('#screen-1').hidden) return;
+  vp.style.height = s.offsetHeight + 'px';
+}
+
+function goSlide(i, opt) {
+  opt = opt || {};
+  i = clamp(i, 0, SLIDES.length - 1);
+  state.storyIndex = i;
+  state.storySeen[i] = true;
+  const track = $('#story-track');
+  if (opt.instant) track.style.transition = 'none';
+  track.style.transform = `translateX(${-i * 100}%)`;
+  if (opt.instant) { void track.offsetWidth; track.style.transition = ''; }
+  $$('.slide', track).forEach((s, k) => {
+    const on = k === i;
+    s.classList.toggle('is-active', on);
+    s.setAttribute('aria-hidden', on ? 'false' : 'true');
+    if ('inert' in s) s.inert = !on;
+  });
+  $('#compare-handle').setAttribute('tabindex', i === COMPARE_INDEX ? '0' : '-1');
+  $$('.dot').forEach((d, k) => {
+    d.classList.toggle('is-seen', !!state.storySeen[k]);
+    if (k === i) d.setAttribute('aria-current', 'true'); else d.removeAttribute('aria-current');
+  });
+  $('#story-prev').setAttribute('aria-disabled', i === 0 ? 'true' : 'false');
+  const last = i === SLIDES.length - 1;
+  $('#story-next').innerHTML = last ? '생각 나누기 <span aria-hidden="true">✍️</span>' : '다음 카드 <span aria-hidden="true">▶</span>';
+  if (last && !state.storyDone) { state.storyDone = true; showQ1(false); }
+  $('#screen-1 [data-next]').hidden = !state.storyDone;
+  if (!opt.silent) $('#story-live').textContent = `${i + 1}번째 카드 / 전체 ${SLIDES.length}장: ${stripTags(fill(SLIDES[i].title))}`;
+  syncStoryHeight();
+  if (!opt.silent) {
+    saveSoon();
+    const top = $('#story-viewport').getBoundingClientRect().top, headH = $('.topbar').offsetHeight;
+    if (!opt.instant && top < headH) window.scrollBy({ top: top - headH - 12, behavior: smooth() });
+  }
+}
+
+function initSwipe() {
+  const vp = $('#story-viewport'), track = $('#story-track');
+  let sw = null;
+  vp.addEventListener('pointerdown', (e) => {
+    if (e.target.closest('.compare, button, a, input, textarea')) return;
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    sw = { id: e.pointerId, x: e.clientX, y: e.clientY, dx: 0, active: false };
+  });
+  vp.addEventListener('pointermove', (e) => {
+    if (!sw || e.pointerId !== sw.id) return;
+    const dx = e.clientX - sw.x, dy = e.clientY - sw.y;
+    if (!sw.active) {
+      if (Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy) * 1.2) {
+        sw.active = true;
+        try { vp.setPointerCapture(e.pointerId); } catch (err) { /* 무시 */ }
+        track.classList.add('is-dragging');
+      } else if (Math.abs(dy) > 12) { sw = null; return; } else return;
+    }
+    const atEdge = (state.storyIndex === 0 && dx > 0) || (state.storyIndex === SLIDES.length - 1 && dx < 0);
+    sw.dx = atEdge ? dx / 3 : dx;
+    track.style.transform = `translateX(calc(${-state.storyIndex * 100}% + ${Math.round(sw.dx)}px))`;
+  });
+  const end = (e) => {
+    if (!sw || (e && e.pointerId !== sw.id)) return;
+    const s = sw;
+    sw = null;
+    track.classList.remove('is-dragging');
+    if (!s.active) return;
+    const lim = Math.min(70, vp.clientWidth * .18);
+    if (s.dx < -lim) goSlide(state.storyIndex + 1);
+    else if (s.dx > lim) goSlide(state.storyIndex - 1);
+    else goSlide(state.storyIndex, { silent: true });
+  };
+  vp.addEventListener('pointerup', end);
+  vp.addEventListener('pointercancel', end);
+}
+
+let compareMood = '';
+function setComparePos(p, user) {
+  const c = CONTENT.story.compare;
+  p = clamp(Math.round(p), 0, 100);
+  const box = $('#compare');
+  if (!box) return;
+  box.style.setProperty('--pos', p + '%');
+  const h = $('#compare-handle');
+  h.setAttribute('aria-valuenow', String(p));
+  h.setAttribute('aria-valuetext', `${c.beforeLabel} ${p}%, ${c.afterLabel} ${100 - p}% 보임`);
+  c.indicators.forEach((d, k) => {
+    const v = d.after + (d.before - d.after) * p / 100;
+    $('#ind-word-' + k).textContent = d.words[v < 34 ? 0 : v < 67 ? 1 : 2];
+    $('#ind-bar-' + k).style.width = Math.round(v) + '%';
+  });
+  const mood = p >= 50 ? 'calm' : 'lonely';
+  if (mood !== compareMood) {
+    compareMood = mood;
+    $('#compare-avatar').innerHTML = bukangiSVG(mood, 'bk-mini', '');
+  }
+  $('#compare-ratio').textContent = `지금 보이는 바다 → ${c.beforeLabel} ${p}% · ${c.afterLabel} ${100 - p}%`;
+  if (user) {
+    state.sliderPos = p;
+    if (!state.sliderMoved) { state.sliderMoved = true; $('#compare-hint').hidden = true; }
+    saveSoon();
+  }
+}
+function initCompare() {
+  const box = $('#compare'), handle = $('#compare-handle');
+  let drag = null;
+  const posOf = (e) => { const r = box.getBoundingClientRect(); return (e.clientX - r.left) / r.width * 100; };
+  box.addEventListener('pointerdown', (e) => {
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    const onHandle = !!e.target.closest('.compare-handle');
+    drag = { id: e.pointerId, x: e.clientX, y: e.clientY, active: onHandle || e.pointerType === 'mouse' };
+    if (drag.active) {
+      try { box.setPointerCapture(e.pointerId); } catch (err) { /* 무시 */ }
+      setComparePos(posOf(e), true);
+      e.preventDefault();
+    }
+  });
+  box.addEventListener('pointermove', (e) => {
+    if (!drag || e.pointerId !== drag.id) return;
+    if (!drag.active) {
+      const dx = Math.abs(e.clientX - drag.x), dy = Math.abs(e.clientY - drag.y);
+      if (dx > 6 && dx > dy) {
+        drag.active = true;
+        try { box.setPointerCapture(e.pointerId); } catch (err) { /* 무시 */ }
+      } else if (dy > 10) { drag = null; return; } else return;
+    }
+    setComparePos(posOf(e), true);
+  });
+  box.addEventListener('pointerup', (e) => {
+    if (drag && !drag.active && e.pointerId === drag.id) setComparePos(posOf(e), true);
+    drag = null;
+  });
+  box.addEventListener('pointercancel', () => { drag = null; });
+  handle.addEventListener('keydown', (e) => {
+    const map = { ArrowLeft: -5, ArrowDown: -5, ArrowRight: 5, ArrowUp: 5, PageDown: -20, PageUp: 20 };
+    let p = null;
+    if (Object.prototype.hasOwnProperty.call(map, e.key)) p = state.sliderPos + map[e.key];
+    else if (e.key === 'Home') p = 0;
+    else if (e.key === 'End') p = 100;
+    if (p !== null) { e.preventDefault(); e.stopPropagation(); setComparePos(p, true); }
+  });
+}
+
+function buildQ1() {
+  const q = CONTENT.q1;
+  $('#q1-title').innerHTML = fill(q.title);
+  $('#emo-before-legend').innerHTML = fill(q.beforeLegend);
+  $('#emo-after-legend').innerHTML = fill(q.afterLegend);
+  const opts = (name) => q.emotions.map((e) => `<label class="emo-opt"><input class="vh-input" type="radio" name="${name}" value="${esc(e.id)}"><span class="face"><span class="emo" aria-hidden="true">${e.emoji}</span><span class="emo-txt">${esc(e.label)}</span></span></label>`).join('');
+  $('#emo-before').innerHTML = opts('emo-before');
+  $('#emo-after').innerHTML = opts('emo-after');
+  $('#q1-label').innerHTML = fill(q.textLabel);
+  $('#q1-text').placeholder = q.placeholder;
+}
+function showQ1(focus) {
+  const p = $('#q1-panel');
+  p.hidden = false;
+  if (focus) {
+    p.scrollIntoView({ behavior: smooth(), block: 'start' });
+    try { $('#q1-title').focus({ preventScroll: true }); } catch (e) { $('#q1-title').focus(); }
+  }
+}
+
+/* =====================================================================
+   2단계: 포획 vs 공존 시뮬레이션
+   ===================================================================== */
+const sim = { key: '', year: 0, playing: false, timer: 0, sharkMood: '' };
+const CTL = {
+  prev: '<path d="M6 5v14M19 5l-10 7 10 7z" fill="currentColor"/>',
+  next: '<path d="M18 5v14M5 5l10 7-10 7z" fill="currentColor"/>',
+  play: '<path d="M8 5l12 7-12 7z" fill="currentColor"/>',
+  pause: '<path d="M8 5v14M16 5v14" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/>',
+  replay: '<path d="M5.5 12a6.5 6.5 0 1 0 2-4.7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M4.5 3.5v5h5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>'
+};
+const ctlIcon = (k) => `<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">${CTL[k]}</svg>`;
+const yearName = (y) => (y === 0 ? '지금' : y + '년차');
+
+function buildSim() {
+  const S = CONTENT.sim;
+  $('#situation-bk').innerHTML = bukangiSVG('anxious', '', '불안해하는 부캉이');
+  $('#situation-tag').textContent = S.situationTag;
+  $('#situation-text').innerHTML = fill(S.situation);
+  $('#situation-sub').innerHTML = fill(S.situationSub);
+  $('#sim-note').innerHTML = fill(S.note);
+  $('#choices').innerHTML = SIM_KEYS.map((k) => {
+    const c = S.scenarios[k];
+    return `<article class="choice" data-choice="${k}">
+      <span class="choice-icon">${ICONS[k]()}</span>
+      <div class="choice-main">
+        <span class="choice-seen" hidden>✔ 살펴봤어요</span>
+        <h3 class="choice-head"><span class="choice-letter" aria-hidden="true">${esc(c.letter)}</span><span class="choice-title">${esc(c.title)}</span></h3>
+        <p class="choice-desc" id="choice-desc-${k}">${fill(c.desc)}</p>
+        <ul>${c.actions.map((a) => `<li>${fill(a)}</li>`).join('')}</ul>
+        <p class="choice-focus">${fill(c.focus)}</p>
+        <button type="button" class="choice-btn" data-choice="${k}" aria-pressed="false" aria-describedby="choice-desc-${k}">${esc(c.letter)} ${esc(c.title)} — 5년 살펴보기 <span aria-hidden="true">▶</span></button>
+      </div>
+    </article>`;
+  }).join('');
+  $('#sim-years').innerHTML = [0, 1, 2, 3, 4, 5].map((y) => `<li><button type="button" class="year-btn" data-year="${y}">${yearName(y)}<span class="yp" aria-hidden="true"></span></button></li>`).join('');
+  $('#sim-prev').innerHTML = ctlIcon('prev');
+  $('#sim-next').innerHTML = ctlIcon('next');
+  $('#sim-replay').innerHTML = ctlIcon('replay');
+  $('#sim-scene').innerHTML = simSceneSVG() + '<span class="sim-stamp" id="sim-stamp" aria-hidden="true"></span>';
+  buildChain();
+  buildGauges();
+  updatePlayBtn();
+}
+
+function buildChain() {
+  const C = CONTENT.sim.chain;
+  const up = C.arrow !== 'down';
+  let html = `<div class="chain-head"><h4>${esc(C.title)}</h4><span class="chain-state" id="chain-state"></span></div>`
+    + `<p class="chain-legend">${esc(up ? C.legendUp : C.legendDown)}</p><ol class="chain">`;
+  C.nodes.forEach((n, i) => {
+    if (i > 0) html += `<li class="link" data-link="${i - 1}" aria-hidden="true">${ICONS.arrow(up ? 'up' : 'down')}<span class="link-txt">${esc(C.linkText)}</span></li>`;
+    html += `<li class="node" data-node="${esc(n.key)}" data-state="same" data-tone="neutral"><span class="node-icon">${ICONS[n.key] ? ICONS[n.key]() : ''}</span>`
+      + `<span class="node-name">${esc(n.name)}${n.sub ? `<small>${esc(n.sub)}</small>` : ''}</span><span class="node-status"></span><span class="node-bar" aria-hidden="true"><i></i></span></li>`;
+  });
+  $('#chain-box').innerHTML = html + '</ol>';
+}
+
+function buildGauges() {
+  const S = CONTENT.sim;
+  $('#gauges').innerHTML = `<p class="gauges-title" id="gauges-title">${esc(S.gaugesTitle)}</p>` + S.gauges.map((g) => `<div class="gauge gauge--${esc(g.key)}" data-g="${esc(g.key)}" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="${esc(g.label)}">`
+    + `<span class="gauge-label"><span class="g-ico" aria-hidden="true">${g.icon} </span>${esc(g.label)}</span>`
+    + `<span class="gauge-track" aria-hidden="true"><i></i></span>`
+    + `<span class="gauge-num" aria-hidden="true"><b class="gauge-value">0</b><span class="gauge-delta"></span></span></div>`).join('');
+}
+
+const yearData = (key, y) => (y === 0 ? CONTENT.sim.start : CONTENT.sim.scenarios[key].years[y - 1]);
+const levelWord = (v) => (v >= 67 ? '많음' : v >= 34 ? '보통' : v >= 15 ? '적음' : '거의 없음');
+
+function chooseScenario(key, opt) {
+  opt = opt || {};
+  const c = CONTENT.sim.scenarios[key];
+  if (!c) return;
+  simPause();
+  if (!state.simFirst) state.simFirst = key;
+  state.simCurrent = key;
+  sim.key = key;
+  $$('.choice').forEach((el) => {
+    const on = el.dataset.choice === key;
+    el.classList.toggle('is-selected', on);
+    $('.choice-btn', el).setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
+  $('#sim').hidden = false;
+  $('#sim-title').innerHTML = `<span class="choice-letter" aria-hidden="true">${esc(c.letter)}</span>${esc(josa(c.title, '을/를'))} 골랐을 때, 5년 동안의 변화`;
+  $('#sim-result').hidden = true;
+  const startYear = opt.year != null ? opt.year : 0;
+  sim.year = startYear;
+  setYear(startYear, { instant: true });
+  if (opt.scroll !== false) {
+    $('#sim').scrollIntoView({ behavior: smooth(), block: 'start' });
+    try { $('#sim-title').focus({ preventScroll: true }); } catch (e) { $('#sim-title').focus(); }
+  }
+  if (opt.autoplay !== false && !prefersReduced()) simPlay();
+  saveSoon();
+}
+
+function setYear(y, opt) {
+  opt = opt || {};
+  if (!sim.key) return;
+  const prevY = sim.year;
+  y = clamp(y, 0, 5);
+  sim.year = y;
+  const d = yearData(sim.key, y), prev = y > 0 ? yearData(sim.key, y - 1) : null;
+  $$('.year-btn').forEach((b) => {
+    const yy = Number(b.dataset.year);
+    b.classList.toggle('is-done', yy < y);
+    if (yy === y) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
+  });
+  $('#sim-stamp').textContent = yearName(y);
+  const ev = $('#sim-event');
+  ev.innerHTML = `<h4>${y === 0 ? fill(d.title) : `${yearName(y)} · ${fill(d.title)}`}</h4><p class="ev-text">${fill(d.text)}</p>`
+    + (d.say ? `<p class="voice"><span class="voice-who">${esc(d.who || '')}</span><q>${fill(d.say)}</q></p>` : '');
+  if (!opt.instant) { ev.classList.remove('is-new'); void ev.offsetWidth; ev.classList.add('is-new'); }
+  updateGauges(d, prev);
+  updateScene(d, y);
+  updateChain(d, !opt.instant && y > prevY);
+  $('#sim-prev').setAttribute('aria-disabled', y === 0 ? 'true' : 'false');
+  $('#sim-next').setAttribute('aria-disabled', y === 5 ? 'true' : 'false');
+  if (y === 5) markViewed(sim.key, !!opt.fromPlay);
+  updatePlayBtn();
+}
+
+function updateGauges(d, prev) {
+  CONTENT.sim.gauges.forEach((g) => {
+    const el = $(`.gauge[data-g="${g.key}"]`);
+    if (!el) return;
+    const v = clamp(Math.round(d.gauges[g.key] || 0), 0, 100);
+    const pv = prev ? clamp(Math.round(prev.gauges[g.key] || 0), 0, 100) : null;
+    const diff = pv == null ? 0 : v - pv;
+    $('.gauge-track i', el).style.width = v + '%';
+    $('.gauge-value', el).textContent = String(v);
+    $('.gauge-delta', el).textContent = pv == null ? '' : diff > 0 ? `▲${diff}` : diff < 0 ? `▼${-diff}` : '–';
+    el.setAttribute('aria-valuenow', String(v));
+    el.setAttribute('aria-valuetext', `${v}점` + (pv == null ? '' : diff > 0 ? `, 지난해보다 ${diff}점 올라감` : diff < 0 ? `, 지난해보다 ${-diff}점 내려감` : ', 지난해와 같음'));
+  });
+}
+
+function updateScene(d, y) {
+  const svg = $('#sim-svg');
+  if (!svg) return;
+  const sc = d.scene || {}, p = d.pop, sl = SIM_SLOTS;
+  const counts = {
+    people: sc.people || 0,
+    signs: sc.signs ? 1 : 0, zones: sc.zones ? 1 : 0, restore: sc.restore ? 1 : 0, edu: sc.edu ? 1 : 0,
+    boat: sc.boat && sc.boat !== 'none' ? 1 : 0,
+    'boat-net': sc.boat === 'net' ? 1 : 0, 'boat-empty': sc.boat === 'empty' ? 1 : 0, 'boat-full': sc.boat === 'full' ? 1 : 0,
+    seaweed: Math.round(p.seaweed / 100 * sl.seaweed.length),
+    shells: Math.round(p.small / 100 * sl.shells.length),
+    small: Math.round(p.small / 100 * sl.schools.length),
+    mid: Math.round(p.mid / 100 * sl.mids.length),
+    shark: p.shark >= 30 ? 1 : 0
+  };
+  $$('.si', svg).forEach((el) => { el.classList.toggle('off', !(Number(el.dataset.i) < (counts[el.dataset.k] || 0))); });
+  const mood = d.mood || 'anxious';
+  if (mood !== sim.sharkMood) { sim.sharkMood = mood; $('#sim-shark').innerHTML = simSharkInner(mood); }
+  $('#sim-murk').style.opacity = (clamp((70 - d.gauges.eco) / 50, 0, 1) * .5).toFixed(2);
+  svg.setAttribute('aria-label', `${yearName(y)} 바닷속 모습: 상어 ${p.shark >= 30 ? '있음' : '없음'}, 가오리·큰 물고기 ${levelWord(p.mid)}, 작은 물고기·조개 ${levelWord(p.small)}, 해조류 ${levelWord(p.seaweed)}`);
+}
+
+function chainStateOf(v, base) {
+  if (v < 15) return 'gone';
+  if (v - base >= 12) return 'up';
+  if (base - v >= 12) return 'down';
+  return 'same';
+}
+function updateChain(d, animate) {
+  const C = CONTENT.sim.chain, base = CONTENT.sim.start.pop;
+  const nodes = $$('#chain-box .node');
+  let first = -1, warn = false;
+  const states = C.nodes.map((n, i) => {
+    const v = d.pop[n.key] || 0, st = chainStateOf(v, base[n.key] || 0);
+    const tone = st === 'gone' || st === 'down' || (st === 'up' && n.upIsWarning) ? 'warn' : st === 'up' ? 'good' : 'neutral';
+    const el = nodes[i];
+    if (el.dataset.state !== st && first < 0) first = i;
+    if (tone === 'warn') warn = true;
+    el.dataset.state = st;
+    el.dataset.tone = tone;
+    $('.node-status', el).textContent = C.status[st];
+    $('.node-bar i', el).style.width = clamp(v, 0, 100) + '%';
+    return { st: st, tone: tone };
+  });
+  $$('#chain-box .link').forEach((l) => {
+    const i = Number(l.dataset.link);
+    const broken = states[i].st === 'gone' || states[i + 1].st === 'gone';
+    l.classList.toggle('is-broken', broken);
+    $('.link-txt', l).textContent = broken ? C.brokenText : C.linkText;
+  });
+  $('#chain-box').classList.toggle('is-balanced', !warn);
+  const cs = $('#chain-state');
+  cs.textContent = warn ? C.shaky : C.balanced;
+  cs.classList.toggle('is-warn', warn);
+  if (animate && first >= 0 && !prefersReduced()) {
+    const cls = states[first].tone === 'good' ? 'is-glow' : 'is-shaking';
+    for (let k = first; k < nodes.length; k++) {
+      const el = nodes[k];
+      setTimeout(() => { el.classList.remove('is-shaking', 'is-glow'); void el.offsetWidth; el.classList.add(cls); }, (k - first) * 260);
+    }
+  }
+}
+
+function simPlay() {
+  if (!sim.key) return;
+  if (sim.year >= 5) setYear(0, { instant: true });
+  sim.playing = true;
+  updatePlayBtn();
+  scheduleNext();
+}
+function scheduleNext() {
+  clearTimeout(sim.timer);
+  if (!sim.playing) return;
+  if (sim.year >= 5) { simPause(); return; }
+  const ms = Math.max(1200, Number(CONTENT.rules.simYearSeconds) * 1000 * (sim.year === 0 ? .6 : 1) || 4500);
+  $$('.year-btn .yp').forEach((b) => { b.style.transition = 'none'; b.style.width = '0'; });
+  const bar = $(`.year-btn[data-year="${sim.year + 1}"] .yp`);
+  if (bar) { void bar.offsetWidth; bar.style.transition = `width ${ms}ms linear`; bar.style.width = '100%'; }
+  sim.timer = setTimeout(() => {
+    if (!sim.playing) return;
+    setYear(sim.year + 1, { fromPlay: true });
+    if (sim.year < 5) scheduleNext(); else simPause();
+  }, ms);
+}
+function simPause() {
+  sim.playing = false;
+  clearTimeout(sim.timer);
+  $$('.year-btn .yp').forEach((b) => { b.style.transition = 'none'; b.style.width = '0'; });
+  updatePlayBtn();
+}
+function updatePlayBtn() {
+  const b = $('#sim-play');
+  if (!b) return;
+  b.innerHTML = ctlIcon(sim.playing ? 'pause' : 'play');
+  b.setAttribute('aria-label', sim.playing ? '일시 정지' : sim.year >= 5 ? '처음부터 자동 재생' : '자동 재생');
+}
+
+function markViewed(key, scroll) {
+  if (!state.simViewed[key]) { state.simViewed[key] = true; saveSoon(); }
+  $$('.choice').forEach((el) => { $('.choice-seen', el).hidden = !state.simViewed[el.dataset.choice]; });
+  showResult(scroll);
+}
+function showResult(scroll) {
+  const S = CONTENT.sim, key = sim.key, c = S.scenarios[key];
+  const other = key === 'capture' ? 'coexist' : 'capture', oc = S.scenarios[other];
+  const last = c.years[c.years.length - 1];
+  const both = state.simViewed.capture && state.simViewed.coexist;
+  let html = `<h3 id="sim-result-title" tabindex="-1">${esc(fill(S.resultTitle, { choice: c.letter + ' ' + c.title }))}</h3><p>${fill(c.result)}</p>`
+    + `<ul class="result-values" aria-label="5년 뒤 지표">${S.gauges.map((g) => `<li><span aria-hidden="true">${g.icon}</span> ${esc(g.label)} <b>${last.gauges[g.key]}</b>점</li>`).join('')}</ul>`
+    + `<p class="reflection">💭 ${fill(S.reflection)}</p>`;
+  if (both) {
+    const lc = S.scenarios.capture.years[S.scenarios.capture.years.length - 1];
+    const lo = S.scenarios.coexist.years[S.scenarios.coexist.years.length - 1];
+    html += `<div class="table-wrap"><table class="data-table"><caption>${esc(S.compareTitle)}</caption>`
+      + `<thead><tr><th scope="col">지표</th><th scope="col">${esc(choiceName('capture'))}</th><th scope="col">${esc(choiceName('coexist'))}</th></tr></thead><tbody>`
+      + S.gauges.map((g) => `<tr><th scope="row"><span aria-hidden="true">${g.icon}</span> ${esc(g.label)}</th><td class="num">${lc.gauges[g.key]}</td><td class="num">${lo.gauges[g.key]}</td></tr>`).join('')
+      + `</tbody></table></div><p class="reflection is-done">${fill(S.bothDone)}</p>`;
+  }
+  html += `<div class="result-actions"><button type="button" class="btn btn-secondary" data-other="${other}"><span aria-hidden="true">🔁</span> ${esc(S.otherButton)}: ${esc(choiceName(other))}</button>`
+    + `<button type="button" class="btn btn-primary" data-go-next>다음 단계로 <span aria-hidden="true">▶</span></button></div>`;
+  const box = $('#sim-result');
+  box.innerHTML = html;
+  box.hidden = false;
+  if (scroll) setTimeout(() => box.scrollIntoView({ behavior: smooth(), block: 'nearest' }), 400);
+}
+
+function renderSimOnEnter() {
+  $$('.choice').forEach((el) => { $('.choice-seen', el).hidden = !state.simViewed[el.dataset.choice]; });
+  if (state.simCurrent && sim.key !== state.simCurrent) {
+    chooseScenario(state.simCurrent, { autoplay: false, scroll: false, year: state.simViewed[state.simCurrent] ? 5 : 0 });
+  }
+}
+
+/* =====================================================================
+   3단계: 나의 선택과 이유
+   ===================================================================== */
+function buildChoice() {
+  const C = CONTENT.choice, S = CONTENT.sim;
+  $('#final-legend').innerHTML = fill(C.finalLegend);
+  $('#final-options').innerHTML = SIM_KEYS.map((k) => {
+    const c = S.scenarios[k];
+    return `<label class="opt-card"><input class="vh-input" type="radio" name="final-choice" value="${k}"><span class="box"><span class="tick" aria-hidden="true"></span>`
+      + `<span class="opt-icon">${ICONS[k]()}</span><span class="opt-main"><span class="opt-title">${esc(c.letter + ' ' + c.title)}</span><span class="opt-desc">${fill(c.desc)}</span></span></span></label>`;
+  }).join('');
+  $('#tags-legend').innerHTML = fill(C.tagsLegend);
+  $('#tags-help').innerHTML = fill(C.tagsHelp);
+  $('#tag-list').innerHTML = C.tags.map((t) => `<label class="chip"><input class="vh-input" type="checkbox" name="tags" value="${esc(t.id)}"><span class="pill">${esc(t.label)}</span></label>`).join('');
+  $('#reason-label').innerHTML = fill(C.reasonLabel);
+  $('#reason-help').innerHTML = fill(C.reasonHelp);
+  $('#reason').placeholder = C.reasonPlaceholder;
+  $('#frames').insertAdjacentHTML('beforeend', `<button type="button" class="frame-btn is-all" data-frame="all">${esc(C.frameAllLabel)}</button>`
+    + C.frames.map((f, i) => `<button type="button" class="frame-btn" data-frame="${i}"></button>`).join(''));
+  updateFrameLabels();
+}
+function frameText(i) {
+  const C = CONTENT.choice;
+  const choice = state.finalChoice ? CONTENT.sim.scenarios[state.finalChoice].short : '___';
+  const one = (t) => stripTags(fill(t, { choice: choice }));
+  return i === 'all' ? C.frames.map(one).join(' ') : one(C.frames[i]);
+}
+function updateFrameLabels() {
+  $$('.frame-btn').forEach((b) => { if (b.dataset.frame !== 'all') b.textContent = '+ ' + frameText(Number(b.dataset.frame)); });
+}
+function insertFrame(text) {
+  const ta = $('#reason');
+  const s = typeof ta.selectionStart === 'number' ? ta.selectionStart : ta.value.length;
+  const e = typeof ta.selectionEnd === 'number' ? ta.selectionEnd : s;
+  const before = ta.value.slice(0, s), after = ta.value.slice(e);
+  const sep = before && !/\s$/.test(before) ? ' ' : '';
+  ta.value = before + sep + text + after;
+  const insStart = before.length + sep.length;
+  const k = ta.value.indexOf('___', insStart);
+  ta.focus();
+  if (k >= 0 && k < insStart + text.length) ta.setSelectionRange(k, k + 3);
+  else ta.setSelectionRange(insStart + text.length, insStart + text.length);
+  state.reason = ta.value;
+  updateCounter();
+  saveSoon();
+}
+function updateCounter() {
+  const n = reasonLength(state.reason), min = CONTENT.rules.reasonMin, blanks = /_{3,}/.test(state.reason);
+  $('#reason-counter').innerHTML = `<span>${n}자 / 최소 ${min}자</span>`
+    + (blanks ? '<span class="need">빈칸(___)을 내 생각으로 바꿔 주세요</span>'
+      : n >= min ? '<span class="ok">✓ 좋아요!</span>' : `<span class="need">${min - n}자 더 써 보세요</span>`);
+}
+
+/* =====================================================================
+   4단계: 공존의 의미
+   ===================================================================== */
+function buildMeaning() {
+  const M = CONTENT.meaning;
+  $('#meaning').innerHTML = `<h3>${esc(M.title)}</h3><ul class="meaning-points">`
+    + M.points.map((p) => `<li><span class="mp-icon" aria-hidden="true">${p.icon}</span><span class="mp-title">${esc(p.title)}</span><span class="mp-text">${fill(p.text)}</span></li>`).join('')
+    + `</ul><p class="meaning-def">${fill(M.definition)}</p>`;
+  $('#q2-title').innerHTML = fill(M.q2);
+  $('#q2-label').innerHTML = fill(M.q2Label);
+  $('#q2-text').placeholder = M.q2Placeholder;
+  $('#pledge-legend').innerHTML = fill(M.pledgeLegend);
+  const opt = (val, label) => `<label class="opt-card"><input class="vh-input" type="radio" name="pledge" value="${esc(val)}"><span class="box"><span class="tick" aria-hidden="true"></span><span class="opt-main"><span>${label}</span></span></span></label>`;
+  $('#pledge-options').innerHTML = M.pledges.map((p) => opt(p, esc(p))).join('') + opt('__custom__', `<span aria-hidden="true">✏️</span> ${esc(M.pledgeCustom)}`);
+}
+function renderClosing() {
+  const key = state.finalChoice || 'coexist';
+  const cl = CONTENT.meaning.closing[key];
+  const short = CONTENT.sim.scenarios[key].short;
+  $('#closing-bk').innerHTML = bukangiSVG(cl.mood, '', `부캉이 (${MOOD_LABEL[cl.mood] || ''})`);
+  $('#closing-bubble').innerHTML = `<p class="bubble-who">🦈 부캉이가 ‘${esc(josa(short, '을/를'))}’ 고른 너에게</p>`
+    + cl.lines.map((l) => `<p>${fill(l)}</p>`).join('') + `<p class="think">${fill(cl.think)}</p>`;
+}
+
+/* =====================================================================
+   5단계: 나의 활동 카드
+   ===================================================================== */
+function renderCard() {
+  const s = state, C = CONTENT.card, M = CONTENT.meaning;
+  const eb = emoById(s.emoBefore), ea = emoById(s.emoAfter);
+  const mood = s.finalChoice === 'capture' ? 'calm' : 'relieved';
+  const tags = tagList(s);
+  $('#activity-card').innerHTML = `
+    <div class="ac-head">
+      <div><p class="ac-kicker">${esc(C.kicker)}</p><h3 class="ac-name">${esc(String(s.name || '').trim() || C.noName)}</h3><p class="ac-date">${esc(fmtDate(s.finishedAt || new Date().toISOString()))}</p></div>
+      <div class="ac-bk">${bukangiSVG(mood, '', '')}</div>
+    </div>
+    <div class="ac-body">
+      <div class="ac-row"><h4>매립 전 → 매립 후, 부캉이의 마음</h4>
+        <p class="ac-emos"><span class="ac-emo" aria-hidden="true">${eb ? eb.emoji : '·'}</span><span>${esc(eb ? eb.label : '-')}</span><span class="ac-arrow" aria-hidden="true">→</span><span class="sr-only">에서</span><span class="ac-emo" aria-hidden="true">${ea ? ea.emoji : '·'}</span><span>${esc(ea ? ea.label : '-')}</span></p>
+        ${s.q1 ? `<p class="ac-quote">“${esc(s.q1)}”</p>` : ''}</div>
+      <div class="ac-grid2">
+        <div class="ac-row"><h4>나의 최종 선택</h4><p><span class="ac-choice">${esc(choiceName(s.finalChoice) || '-')}</span></p>${s.simFirst && s.simFirst !== s.finalChoice ? `<p class="ac-small">처음 살펴본 선택: ${esc(choiceName(s.simFirst))}</p>` : ''}</div>
+        <div class="ac-row"><h4>내가 고려한 가치</h4><div class="ac-tags">${tags.length ? tags.map((t) => `<span class="ac-tag">#${esc(t)}</span>`).join('') : '-'}</div></div>
+      </div>
+      <div class="ac-row"><h4>나의 이유</h4><p class="ac-text">${esc(s.reason || '-')}</p></div>
+      <div class="ac-row ac-meaning"><h4>공존의 의미</h4><p>${fill(M.definition)}</p><p class="ac-small"><b>상어를 쫓아내기만 한다면?</b> ${esc(s.q2 || '-')}</p></div>
+      <div class="ac-row ac-pledge"><h4>나의 다짐</h4><p>🌊 ${esc(pledgeText(s) || '-')}</p></div>
+    </div>
+    <p class="ac-foot">${fill(C.footer)}</p>`;
+  $('#card-help').innerHTML = fill(C.help);
+}
+function cardText() {
+  const s = state;
+  return [
+    `[${CONTENT.card.kicker}]`,
+    `이름: ${String(s.name || '').trim() || '-'}`,
+    `날짜: ${fmtDate(s.finishedAt || new Date().toISOString())}`,
+    `매립 전 → 후 부캉이의 마음: ${emoText(s.emoBefore)} → ${emoText(s.emoAfter)}`,
+    `부캉이에게 바다는: ${s.q1 || '-'}`,
+    `나의 최종 선택: ${choiceName(s.finalChoice) || '-'}`,
+    `내가 고려한 가치: ${tagList(s).map((t) => '#' + t).join(' ') || '-'}`,
+    `나의 이유: ${s.reason || '-'}`,
+    `공존의 의미: ${stripTags(fill(CONTENT.meaning.definition))}`,
+    `상어를 쫓아내기만 한다면?: ${s.q2 || '-'}`,
+    `나의 다짐: ${pledgeText(s) || '-'}`
+  ].join('\n');
+}
+
+let h2cPromise = null;
+function loadHtml2canvas() {
+  if (window.html2canvas) return Promise.resolve(window.html2canvas);
+  if (!h2cPromise) {
+    h2cPromise = new Promise((resolve, reject) => {
+      const sc = document.createElement('script');
+      sc.src = H2C_URL;
+      sc.async = true;
+      sc.onload = () => (window.html2canvas ? resolve(window.html2canvas) : reject(new Error('html2canvas 없음')));
+      sc.onerror = () => { h2cPromise = null; reject(new Error('불러오기 실패')); };
+      document.head.appendChild(sc);
+    });
+  }
+  return h2cPromise;
+}
+function triggerDownload(href, name) {
+  try {
+    const a = document.createElement('a');
+    a.href = href; a.download = name; a.rel = 'noopener';
+    document.body.appendChild(a); a.click(); a.remove();
+    return true;
+  } catch (e) { return false; }
+}
+function downloadBlob(blob, name) {
+  try {
+    if (window.navigator && window.navigator.msSaveOrOpenBlob) { window.navigator.msSaveOrOpenBlob(blob, name); return true; }
+    const url = URL.createObjectURL(blob);
+    const ok = triggerDownload(url, name);
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+    return ok;
+  } catch (e) { return false; }
+}
+async function saveImage() {
+  const btn = $('#save-image'), txt = $('.btn-txt', btn);
+  if (btn.disabled) return;
+  btn.disabled = true;
+  txt.textContent = '이미지 만드는 중…';
+  try {
+    const h2c = await loadHtml2canvas();
+    if (document.fonts && document.fonts.ready) await document.fonts.ready;
+    const canvas = await h2c($('#activity-card'), {
+      scale: 2, backgroundColor: '#fffaf1', useCORS: true, logging: false, windowWidth: 800,
+      onclone: (doc) => { doc.documentElement.classList.add('capturing'); }
+    });
+    const url = canvas.toDataURL('image/png');
+    const fname = `부캉이의바다_${(String(state.name || '').trim() || '활동카드').replace(/[\\/:*?"<>|\s]+/g, '_')}_${stamp().slice(0, 8)}.png`;
+    $('#image-preview').src = url;
+    const a = $('#image-download');
+    a.href = url;
+    a.setAttribute('download', fname);
+    triggerDownload(url, fname);
+    openModal('#image-modal', '#image-download');
+  } catch (err) {
+    toast('이미지를 만들지 못했어요. 인터넷 연결을 확인하거나 [텍스트 복사]를 이용해 주세요.');
+  } finally {
+    btn.disabled = false;
+    txt.textContent = '이미지로 저장';
+  }
+}
+function showText(title, desc, text) {
+  $('#text-title').textContent = title;
+  $('#text-desc').textContent = desc;
+  $('#text-out').value = text;
+  openModal('#text-modal', '#text-out');
+  setTimeout(() => { try { $('#text-out').select(); } catch (e) { /* 무시 */ } }, 60);
+}
+async function copyText() {
+  const text = cardText();
+  let ok = false;
+  try {
+    if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(text); ok = true; }
+  } catch (e) { ok = false; }
+  if (!ok) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed'; ta.style.top = '-1000px'; ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    ta.remove();
+  }
+  if (ok) toast('활동 카드 내용을 복사했어요. 원하는 곳에 붙여 넣으세요.');
+  else showText('내용 복사하기', '아래 글을 길게 누르거나 Ctrl+C로 복사하세요.', text);
+}
+
+/* =====================================================================
+   처음부터 다시 / 다음 학생
+   ===================================================================== */
+function applyStateToUI() {
+  $('#student-name').value = state.name;
+  $$('input[name="emo-before"]').forEach((r) => { r.checked = r.value === state.emoBefore; });
+  $$('input[name="emo-after"]').forEach((r) => { r.checked = r.value === state.emoAfter; });
+  $('#q1-text').value = state.q1;
+  $('#q1-panel').hidden = !state.storyDone;
+  compareMood = '';
+  setComparePos(state.sliderPos, false);
+  $('#compare-hint').hidden = !!state.sliderMoved;
+  goSlide(state.storyIndex, { instant: true, silent: true });
+  simPause();
+  sim.key = ''; sim.year = 0; sim.sharkMood = '';
+  $('#sim').hidden = true;
+  $('#sim-result').hidden = true;
+  $$('.choice').forEach((el) => {
+    el.classList.remove('is-selected');
+    $('.choice-btn', el).setAttribute('aria-pressed', 'false');
+    $('.choice-seen', el).hidden = !state.simViewed[el.dataset.choice];
+  });
+  $$('input[name="final-choice"]').forEach((r) => { r.checked = r.value === state.finalChoice; });
+  $$('input[name="tags"]').forEach((c) => { c.checked = state.tags.indexOf(c.value) >= 0; });
+  $('#tag-etc').value = state.tagEtc;
+  $('#tag-etc-field').hidden = state.tags.indexOf('etc') < 0;
+  $('#reason').value = state.reason;
+  updateCounter();
+  updateFrameLabels();
+  $('#q2-text').value = state.q2;
+  $$('input[name="pledge"]').forEach((r) => { r.checked = r.value === state.pledge; });
+  $('#pledge-custom').value = state.pledgeCustom;
+  $('#pledge-custom-field').hidden = state.pledge !== '__custom__';
+  renderStart();
+}
+function resetSession() {
+  saveNow();
+  simPause();
+  state = newState();
+  storage.set(STORE_KEY, state);
+  applyStateToUI();
+  goTo(0);
+}
+
+/* =====================================================================
+   창(모달)과 확인 창
+   ===================================================================== */
+const modalStack = [];
+function focusables(root) {
+  return $$('a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select, [tabindex]:not([tabindex="-1"])', root)
+    .filter((el) => !el.closest('[hidden]') && (el.offsetWidth || el.offsetHeight || el.getClientRects().length));
+}
+function openModal(sel, focusSel, onClose) {
+  const m = $(sel);
+  if (!m || !m.hidden) return;
+  m.hidden = false;
+  modalStack.push({ m: m, ret: document.activeElement, onClose: onClose });
+  document.body.classList.add('modal-open');
+  const box = $('[role="dialog"], [role="alertdialog"]', m);
+  const f = (focusSel && $(focusSel, m)) || focusables(box)[0] || box;
+  setTimeout(() => { try { f.focus(); } catch (e) { /* 무시 */ } }, 30);
+}
+function closeModal(result) {
+  const top = modalStack.pop();
+  if (!top) return;
+  top.m.hidden = true;
+  if (!modalStack.length) document.body.classList.remove('modal-open');
+  if (top.ret && document.contains(top.ret)) { try { top.ret.focus(); } catch (e) { /* 무시 */ } }
+  if (top.onClose) top.onClose(result);
+}
+function confirmDialog(title, msg, yesLabel) {
+  return new Promise((resolve) => {
+    $('#confirm-title').textContent = title;
+    $('#confirm-msg').textContent = msg;
+    $('#confirm-yes').textContent = yesLabel || '확인';
+    openModal('#confirm-modal', '#confirm-no', (r) => resolve(r === true));
+  });
+}
+
+/* =====================================================================
+   교사용 패널
+   ===================================================================== */
+let teacherUnlocked = false;
+function evaluate(rec) {
+  const norm = (t) => String(t || '').replace(/\s+/g, '');
+  const out = {};
+  ['life', 'eco'].forEach((k) => {
+    const cfg = CONTENT.evaluation[k], ev = [], extra = [];
+    const scan = (txt) => {
+      const n = norm(txt), hits = [], seen = [];
+      cfg.keywords.forEach((w) => { const nw = norm(w); if (nw && n.indexOf(nw) >= 0 && seen.indexOf(nw) < 0) { seen.push(nw); hits.push(w); } });
+      return hits.map((w) => `‘${w}’`).join(', ');
+    };
+    (cfg.tagIds || []).forEach((t) => { if ((rec.tags || []).indexOf(t) >= 0) ev.push(`태그 ‘${tagLabel(t)}’`); });
+    const a = scan(rec.reason); if (a) ev.push('이유 글: ' + a);
+    const b = scan(rec.tagEtc); if (b) ev.push('기타 태그: ' + b);
+    const c = scan(rec.q2); if (c) extra.push('발문 2 답: ' + c);
+    out[k] = { ok: ev.length > 0, evidence: ev, extra: extra };
+  });
+  return out;
+}
+function badgesHTML(ev) {
+  return '<div class="badges">' + ['life', 'eco'].map((k) => {
+    const b = CONTENT.evaluation[k].badge;
+    return ev[k].ok ? `<span class="badge is-ok">[${esc(b)} ✔]</span>` : `<span class="badge is-no">${esc(b)} – 자동 감지 안 됨</span>`;
+  }).join('') + '</div>';
+}
+function evidenceHTML(ev) {
+  return ['life', 'eco'].map((k) => {
+    const e = ev[k];
+    if (!e.evidence.length && !e.extra.length) return '';
+    return `<p class="evidence"><b>${esc(CONTENT.evaluation[k].badge)}</b> 근거: ${esc(e.evidence.join(' · ') || '없음')}`
+      + (e.extra.length ? ` <span>(참고 — ${esc(e.extra.join(' · '))})</span>` : '') + '</p>';
+  }).join('');
+}
+function summaryRows(r) {
+  return [
+    ['이름(번호)', r.name || '(입력 안 함)'],
+    ['진행 상태', statusText(r)],
+    ['매립 전 → 후 감정', `${emoText(r.emoBefore)} → ${emoText(r.emoAfter)}`],
+    ['발문 1 한 줄', r.q1 || '-'],
+    ['시뮬레이션', `처음 선택: ${choiceName(r.simFirst) || '-'} / 살펴본 것: ${viewedText(r)}`],
+    ['최종 선택', choiceName(r.finalChoice) || '-'],
+    ['고려한 것', tagList(r).join(', ') || '-'],
+    ['나의 이유', r.reason || '-'],
+    ['발문 2 답', r.q2 || '-'],
+    ['나의 다짐', r.pledge || '-']
+  ];
+}
+const dlHTML = (rows) => `<dl class="summary-dl">${rows.map((x) => `<dt>${esc(x[0])}</dt><dd>${esc(x[1])}</dd>`).join('')}</dl>`;
+
+function renderGuide() {
+  const G = CONTENT.teacherGuide, E = CONTENT.evaluation;
+  const rows = [0, 1, 2, 3, 4, 5].map((i) => `<tr><th scope="row">${i === 0 ? '시작' : i + '단계'} · ${esc(CONTENT.stages[i].title)}</th><td>${esc(G.flow[i] || '')}</td><td class="num">${esc(STAGE_TIMES[i])}</td></tr>`).join('');
+  const kw = (cfg) => `태그 ${cfg.tagIds.map((t) => `‘${esc(tagLabel(t))}’`).join(', ')} 또는 이유 글 속 낱말: ${cfg.keywords.map(esc).join(', ')}`;
+  $('#tp-guide').innerHTML = `
+    <h3>수업 목표</h3><p>${esc(G.goal)}</p>
+    <h3>교사 발문</h3><ol><li>${fill(CONTENT.q1.title)} <small>(1단계 끝)</small></li><li>${fill(CONTENT.meaning.q2)} <small>(4단계)</small></li></ol>
+    <h3>활동 흐름과 권장 시간</h3>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">단계</th><th scope="col">학생 활동</th><th scope="col">권장 시간</th></tr></thead>
+    <tbody>${rows}</tbody><tfoot><tr><th scope="row" colspan="2">합계</th><td class="num">약 ${esc(totalTimeText())}</td></tr></tfoot></table></div>
+    <h3>평가 포인트</h3><p>${esc(G.evalPoint)}</p>
+    <ul><li><span class="badge is-ok">[${esc(E.life.badge)} ✔]</span> ${kw(E.life)}</li><li><span class="badge is-ok">[${esc(E.eco.badge)} ✔]</span> ${kw(E.eco)}</li></ul>
+    <p class="notice" style="margin-top:10px">ℹ️ ${esc(E.note)} 발문 2 답에서 찾은 낱말은 ‘참고’로만 보여 줘요.</p>
+    <h3>운영 팁</h3><ul>${G.tips.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>
+    ${storageOK ? '' : '<p class="notice" style="margin-top:10px">⚠️ 이 브라우저에서는 저장 기능을 쓸 수 없어, 새로고침하면 기록이 사라져요.</p>'}`;
+}
+function renderCurrent() {
+  if (!state.started) {
+    $('#tp-current').innerHTML = '<p>아직 이 화면에서 활동을 시작한 학생이 없어요.</p>';
+    return;
+  }
+  const rec = buildRecord(state), ev = evaluate(rec);
+  $('#tp-current').innerHTML = badgesHTML(ev) + evidenceHTML(ev)
+    + `<p class="notice" style="margin:10px 0 14px">ℹ️ ${esc(CONTENT.evaluation.note)}</p>` + dlHTML(summaryRows(rec))
+    + `<div class="tools" style="margin-top:16px"><button type="button" class="btn btn-secondary" data-act="new-student"><span aria-hidden="true">🧑‍🎓</span> 다음 학생 새로 시작</button></div>`;
+}
+function renderRecords() {
+  const recs = getRecords().slice().sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt)));
+  $('#rec-count').textContent = `(${recs.length})`;
+  const done = recs.filter((r) => r.finishedAt).length;
+  let html = `<div class="tools"><button type="button" class="btn btn-primary" data-act="csv"><span aria-hidden="true">⬇️</span> CSV 내려받기</button>`
+    + `<button type="button" class="btn btn-secondary" data-act="refresh"><span aria-hidden="true">↻</span> 새로 고침</button>`
+    + `<button type="button" class="btn btn-danger" data-act="clear"><span aria-hidden="true">🗑️</span> 기록 모두 지우기</button></div>`
+    + `<p style="margin:12px 0 8px">이 기기에 저장된 기록 <b>${recs.length}건</b> (완료 ${done}건)</p>`
+    + `<p class="notice">ℹ️ ${esc(CONTENT.evaluation.note)}</p>`;
+  if (!storageOK) html += '<p class="notice">⚠️ 이 브라우저는 저장 공간을 쓸 수 없어, 지금 열려 있는 동안의 기록만 보여요.</p>';
+  if (!recs.length) html += '<p style="margin-top:12px">아직 저장된 기록이 없어요.</p>';
+  else {
+    html += '<div class="records">' + recs.map((r) => {
+      const ev = evaluate(r);
+      return `<article class="record"><div class="record-head"><span class="record-name">${esc(r.name || '(이름 없음)')}${r.id === state.id ? ' <span class="status-pill">지금 이 화면</span>' : ''}</span>`
+        + `<span class="record-meta"><span class="status-pill${r.finishedAt ? ' is-done' : ''}">${esc(statusText(r))}</span> · ${esc(fmtDate(r.updatedAt, true))}</span></div>`
+        + `<p class="record-path">🧭 처음 살펴본 선택 ${esc(choiceName(r.simFirst) || '-')} → 최종 선택 <b>${esc(choiceName(r.finalChoice) || '-')}</b></p>`
+        + badgesHTML(ev) + evidenceHTML(ev)
+        + `<details><summary>응답 자세히 보기</summary>${dlHTML(summaryRows(r))}</details></article>`;
+    }).join('') + '</div>';
+  }
+  $('#tp-records').innerHTML = html;
+}
+function csvCell(v) {
+  let t = String(v == null ? '' : v);
+  if (/^[=+\-@\t\r]/.test(t)) t = "'" + t;
+  return '"' + t.replace(/"/g, '""') + '"';
+}
+function exportCSV() {
+  const recs = getRecords().slice().sort((a, b) => String(a.startedAt).localeCompare(String(b.startedAt)));
+  if (!recs.length) { toast('내려받을 기록이 없어요.'); return; }
+  const head = ['번호', '이름(번호)', '상태', '시작 시각', '마지막 저장 시각', '소요 시간(분)', '매립 전 감정', '매립 후 감정', '발문1 한 줄',
+    '시뮬레이션 첫 선택', '살펴본 선택', '최종 선택', '고려한 것', '기타 내용', '나의 이유', '이유 글자 수', '발문2 답', '나의 다짐',
+    '생명권 고려(자동)', '생태계 연결성 고려(자동)', '자동 표시 근거', '기록 ID'];
+  const rows = recs.map((r, i) => {
+    const ev = evaluate(r), eb = emoById(r.emoBefore), ea = emoById(r.emoAfter);
+    const end = r.finishedAt || r.updatedAt;
+    const mins = r.startedAt && end ? Math.max(0, Math.round((new Date(end) - new Date(r.startedAt)) / 6000) / 10) : '';
+    const basis = ['life', 'eco'].map((k) => {
+      const all = ev[k].evidence.concat(ev[k].extra.map((x) => '참고 ' + x));
+      return all.length ? `${CONTENT.evaluation[k].badge}: ${all.join(' · ')}` : '';
+    }).filter(Boolean).join(' / ');
+    return [i + 1, r.name, statusText(r), fmtDate(r.startedAt, true), fmtDate(r.updatedAt, true), mins,
+      eb ? eb.label : '', ea ? ea.label : '', r.q1, choiceName(r.simFirst), viewedText(r), choiceName(r.finalChoice),
+      (r.tags || []).map(tagLabel).join('; '), r.tagEtc, r.reason, reasonLength(r.reason), r.q2, r.pledge,
+      ev.life.ok ? 'O' : '', ev.eco.ok ? 'O' : '', basis, r.id];
+  });
+  const csv = '﻿' + [head].concat(rows).map((row) => row.map(csvCell).join(',')).join('\r\n');
+  const ok = downloadBlob(new Blob([csv], { type: 'text/csv;charset=utf-8' }), `부캉이의바다_응답_${stamp()}.csv`);
+  if (ok) toast(`CSV 파일(${recs.length}건)을 내려받았어요.`);
+  else showText('CSV 내용', '내려받기가 안 되면 아래 내용을 복사해 메모장에 붙여 넣고 .csv 파일로 저장하세요.', csv);
+}
+function selectTab(name, focus) {
+  ['guide', 'current', 'records'].forEach((t) => {
+    const tab = $('#tab-' + t), panel = $('#tp-' + t), on = t === name;
+    tab.setAttribute('aria-selected', on ? 'true' : 'false');
+    tab.tabIndex = on ? 0 : -1;
+    panel.hidden = !on;
+    if (on && focus) tab.focus();
+  });
+}
+function openTeacher() {
+  saveNow();
+  renderGuide();
+  renderCurrent();
+  renderRecords();
+  openModal('#teacher-modal', '#tab-guide');
+  selectTab('guide', false);
+}
+
+/* =====================================================================
+   이벤트 연결
+   ===================================================================== */
+function bindEvents() {
+  // 진행 표시줄
+  $('#steps').addEventListener('click', (e) => {
+    const b = e.target.closest('.step-btn');
+    if (!b) return;
+    const i = Number(b.dataset.step);
+    if (i > state.maxScreen) { toast('앞 단계를 먼저 마쳐 주세요.'); return; }
+    if (i !== state.screen) goTo(i);
+  });
+  // 단계 이동 버튼
+  $$('.screen').forEach((sc) => {
+    const n = Number(sc.dataset.screen);
+    const prev = $('[data-prev]', sc), next = $('[data-next]', sc);
+    if (prev) prev.addEventListener('click', () => goTo(n - 1));
+    if (next) next.addEventListener('click', () => tryNext(n));
+  });
+  // 0단계
+  $('#student-name').addEventListener('input', (e) => { state.name = e.target.value; saveSoon(); });
+  $('#student-name').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); startActivity(); } });
+  $('#start-btn').addEventListener('click', startActivity);
+  $('#new-start-btn').addEventListener('click', async () => {
+    if (await confirmDialog('새로 시작할까요?', '지금까지의 진행 내용은 이 기기의 기록에 남겨 두고, 처음부터 새로 시작해요.', '새로 시작')) resetSession();
+  });
+  // 1단계
+  $('#story-prev').addEventListener('click', () => { if (state.storyIndex > 0) goSlide(state.storyIndex - 1); });
+  $('#story-next').addEventListener('click', () => { if (state.storyIndex < SLIDES.length - 1) goSlide(state.storyIndex + 1); else showQ1(true); });
+  $('#story-dots').addEventListener('click', (e) => { const d = e.target.closest('.dot'); if (d) goSlide(Number(d.dataset.dot)); });
+  $('#story').addEventListener('keydown', (e) => {
+    if (e.target.closest('.compare-handle, input, textarea')) return;
+    if (e.key === 'ArrowRight') { e.preventDefault(); goSlide(state.storyIndex + 1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); goSlide(state.storyIndex - 1); }
+  });
+  $('#q1-panel').addEventListener('change', (e) => {
+    if (e.target.name === 'emo-before') state.emoBefore = e.target.value;
+    if (e.target.name === 'emo-after') state.emoAfter = e.target.value;
+    saveSoon();
+  });
+  $('#q1-text').addEventListener('input', (e) => { state.q1 = e.target.value; saveSoon(); });
+  // 2단계
+  $('#choices').addEventListener('click', (e) => { const b = e.target.closest('.choice-btn'); if (b) chooseScenario(b.dataset.choice); });
+  $('#sim-years').addEventListener('click', (e) => { const b = e.target.closest('.year-btn'); if (b) { simPause(); setYear(Number(b.dataset.year)); } });
+  $('#sim-prev').addEventListener('click', () => { simPause(); setYear(sim.year - 1); });
+  $('#sim-next').addEventListener('click', () => { simPause(); setYear(sim.year + 1); });
+  $('#sim-play').addEventListener('click', () => { if (sim.playing) simPause(); else simPlay(); });
+  $('#sim-replay').addEventListener('click', () => { simPause(); setYear(0, { instant: true }); simPlay(); });
+  $('#sim-result').addEventListener('click', (e) => {
+    const o = e.target.closest('[data-other]');
+    if (o) { chooseScenario(o.dataset.other); return; }
+    if (e.target.closest('[data-go-next]')) tryNext(2);
+  });
+  // 3단계
+  $('#final-options').addEventListener('change', (e) => { if (e.target.name === 'final-choice') { state.finalChoice = e.target.value; updateFrameLabels(); saveSoon(); } });
+  $('#tag-list').addEventListener('change', (e) => {
+    state.tags = $$('input[name="tags"]:checked').map((c) => c.value);
+    const etc = state.tags.indexOf('etc') >= 0;
+    $('#tag-etc-field').hidden = !etc;
+    if (etc && e.target.value === 'etc') $('#tag-etc').focus();
+    saveSoon();
+  });
+  $('#tag-etc').addEventListener('input', (e) => { state.tagEtc = e.target.value; saveSoon(); });
+  $('#frames').addEventListener('click', (e) => {
+    const b = e.target.closest('.frame-btn');
+    if (b) insertFrame(frameText(b.dataset.frame === 'all' ? 'all' : Number(b.dataset.frame)));
+  });
+  $('#reason').addEventListener('input', (e) => { state.reason = e.target.value; updateCounter(); saveSoon(); });
+  // 4단계
+  $('#q2-text').addEventListener('input', (e) => { state.q2 = e.target.value; saveSoon(); });
+  $('#pledge-options').addEventListener('change', (e) => {
+    if (e.target.name !== 'pledge') return;
+    state.pledge = e.target.value;
+    const custom = state.pledge === '__custom__';
+    $('#pledge-custom-field').hidden = !custom;
+    if (custom) $('#pledge-custom').focus();
+    saveSoon();
+  });
+  $('#pledge-custom').addEventListener('input', (e) => { state.pledgeCustom = e.target.value; saveSoon(); });
+  // 5단계
+  $('#save-image').addEventListener('click', saveImage);
+  $('#copy-text').addEventListener('click', copyText);
+  $('#restart-btn').addEventListener('click', async () => {
+    const ok = await confirmDialog('처음부터 다시 할까요?', '지금까지의 활동은 이 기기의 기록에 저장되어 있어요. 화면을 처음으로 되돌려 다음 사람이 새로 시작할 수 있어요.', '처음부터 다시');
+    if (ok) { resetSession(); toast('처음 화면으로 돌아왔어요.'); }
+  });
+  // 창(모달)
+  $$('.modal').forEach((m) => {
+    m.addEventListener('click', (e) => {
+      if (e.target === m || e.target.closest('[data-close]')) closeModal(false);
+    });
+  });
+  $('#confirm-yes').addEventListener('click', () => closeModal(true));
+  $('#confirm-no').addEventListener('click', () => closeModal(false));
+  document.addEventListener('keydown', (e) => {
+    if (!modalStack.length) return;
+    const top = modalStack[modalStack.length - 1].m;
+    if (e.key === 'Escape') { e.preventDefault(); closeModal(false); return; }
+    if (e.key !== 'Tab') return;
+    const f = focusables(top);
+    if (!f.length) return;
+    const first = f[0], last = f[f.length - 1];
+    if (!top.contains(document.activeElement)) { e.preventDefault(); first.focus(); }
+    else if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  });
+  // 교사용
+  $('#teacher-btn').addEventListener('click', () => {
+    if (teacherUnlocked) { openTeacher(); return; }
+    $('#pw-input').value = '';
+    $('#pw-error').textContent = '';
+    openModal('#pw-modal', '#pw-input');
+  });
+  $('#pw-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    if ($('#pw-input').value === String(TEACHER_PASSWORD)) {
+      teacherUnlocked = true;
+      closeModal(true);
+      openTeacher();
+    } else {
+      $('#pw-error').textContent = '비밀번호가 맞지 않아요.';
+      $('#pw-input').select();
+    }
+  });
+  $('.tabs').addEventListener('click', (e) => { const t = e.target.closest('[role="tab"]'); if (t) selectTab(t.id.replace('tab-', ''), true); });
+  $('.tabs').addEventListener('keydown', (e) => {
+    const names = ['guide', 'current', 'records'];
+    const cur = names.indexOf(String(document.activeElement && document.activeElement.id).replace('tab-', ''));
+    if (cur < 0) return;
+    let n = null;
+    if (e.key === 'ArrowRight') n = (cur + 1) % 3;
+    if (e.key === 'ArrowLeft') n = (cur + 2) % 3;
+    if (e.key === 'Home') n = 0;
+    if (e.key === 'End') n = 2;
+    if (n !== null) { e.preventDefault(); selectTab(names[n], true); }
+  });
+  $('#teacher-modal').addEventListener('click', async (e) => {
+    const b = e.target.closest('[data-act]');
+    if (!b) return;
+    const act = b.dataset.act;
+    if (act === 'csv') exportCSV();
+    if (act === 'refresh') { saveNow(); renderRecords(); renderCurrent(); toast('기록을 새로 불러왔어요.'); }
+    if (act === 'clear') {
+      if (await confirmDialog('기록을 모두 지울까요?', '이 기기에 저장된 모든 학생 기록이 지워져요. 먼저 CSV로 내려받아 두는 것을 권해요. 지운 기록은 되살릴 수 없어요.', '모두 지우기')) {
+        storage.remove(RECORDS_KEY);
+        renderRecords();
+        toast('저장된 기록을 모두 지웠어요.');
+      }
+    }
+    if (act === 'new-student') {
+      if (await confirmDialog('다음 학생을 시작할까요?', '지금 학생의 기록은 그대로 저장되고, 화면이 처음으로 돌아가요.', '새로 시작')) {
+        closeModal(false);
+        resetSession();
+        toast('새 학생이 시작할 수 있어요.');
+      }
+    }
+  });
+  // 화면 크기·글꼴 변화
+  window.addEventListener('resize', debounce(syncStoryHeight, 120));
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(syncStoryHeight);
+  if ('ResizeObserver' in window) {
+    const ro = new ResizeObserver(() => syncStoryHeight());
+    $$('.slide').forEach((s) => ro.observe(s));
+  }
+  // 나갈 때 저장
+  window.addEventListener('pagehide', saveNow);
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') saveNow(); });
+}
+
+/* =====================================================================
+   시작
+   ===================================================================== */
+function init() {
+  renderStaticTexts();
+  renderSteps();
+  buildStart();
+  buildStory();
+  buildQ1();
+  buildSim();
+  buildChoice();
+  buildMeaning();
+  bindEvents();
+  applyStateToUI();
+  goTo(state.screen, { animate: false, focus: false, scroll: false });
+  if (!storageOK) setTimeout(() => toast('이 브라우저에서는 자동 저장이 되지 않아요. 새로고침하지 말고 이어서 해 주세요.'), 600);
+}
+init();
+</script>
+</body>
 </html>
+<!--
+=====================================================================
+  📘 선생님을 위한 수정 안내 (부캉이의 바다)
+=====================================================================
+  이 파일 하나만 있으면 돼요. 더블클릭해서 브라우저로 열거나, 학교 홈페이지·
+  GitHub Pages·패들렛 링크 등으로 올려 학생들이 접속하게 하세요.
+  (글꼴과 '이미지로 저장' 기능은 인터넷 연결이 필요해요.)
+
+  메모장이나 코드 편집기로 열어 <script> 바로 아래의 세 곳을 고치면 돼요.
+
+  1) 교사 비밀번호 ─ TEACHER_PASSWORD
+       const TEACHER_PASSWORD = '0000';   →  '2580' 처럼 원하는 값으로 바꾸세요.
+       ※ 학생이 실수로 여는 것을 막는 가림막일 뿐, 보안 장치는 아니에요.
+
+  2) 단계별 권장 시간 ─ STAGE_TIMES
+       0: 시작, 1: 이야기, 2: 시뮬레이션, 3: 나의 선택, 4: 공존의 의미, 5: 활동 카드
+       '3분', '1분 30초'처럼 쓰면 진행 표시줄·시작 화면·교사 안내의 합계가 자동으로 바뀌어요.
+
+  3) 화면에 나오는 글 ─ CONTENT
+       · place        : 지역 이름 (village 마을 / park 공원 / sea 바다).
+                        글 속 {park} 가 이 이름으로 바뀌고, {park:이/가} 처럼 쓰면 조사도 맞춰 줘요.
+       · rules        : 최소 글자 수(발문 1, 이유, 발문 2)와 시뮬레이션 1년의 길이(초).
+       · story.cards  : 부캉이 이야기 카드. 카드를 더하거나 빼도 돼요.
+                        scene: before / construction / after / people (그림 종류)
+                        mood : calm 편안함 / anxious 불안 / lonely 외로움 / relieved 안도 (표정)
+       · story.compare: 비교 슬라이더 문구와 지표(0~100 상대 점수, 실제 측정값 아님).
+       · q1           : 발문 1과 감정 이모지 목록.
+       · sim          : 상황 문구, 게이지 이름, 먹이사슬(arrow: 'up' 교과서 방식 / 'down'),
+                        포획·공존 두 선택의 연도별 글·게이지 점수·생물 수(pop)·장면(scene).
+       · choice       : '내가 고려한 것' 태그, 이유 쓰기 안내, 생각 도우미 문장틀.
+       · meaning      : 선택별 부캉이의 마무리 말, 공존의 의미, 발문 2, 다짐 목록.
+       · evaluation   : 교사용 자동 배지(생명권 고려 / 생태계 연결성 고려)를 붙일 태그와 낱말.
+       · teacherGuide : 교사용 패널의 수업 목표, 활동 흐름, 운영 팁.
+       ※ 글을 고칠 때 따옴표(' ')와 쉼표(,)를 지우지 않도록 조심하세요.
+
+  학생 기록은 그 기기의 브라우저(localStorage)에만 저장되고 어디로도 보내지지 않아요.
+  화면 오른쪽 위 [🔒 교사용] → 비밀번호 → [저장된 기록] 탭에서 CSV로 내려받으세요.
+=====================================================================
+-->
